@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Authentication Failure</title>
+<link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" href="../../css/font-awesome.min.css" />
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../../css/bootstrap.min.css" />
+<link rel="stylesheet" th:href="@{/css/custom.min.css}" href="../../css/custom.min.css" />
+<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+</head>
+<body>
+
+	<div class="loginOutWrap">
+		<p class="loginLogo">
+			<img th:src="@{/images/logo.png}" alt="TGS" title="TGS" />
+		</p>
+		<p class="SecondarySale">Secondary Sales Target System</p>
+		<p class="text-center message-text">Logged Out Successfully.</p>
+		<p>
+			<a th:href="@{/login}">Click here to login</a>
+		</p>
+	</div>
+	<script type="text/javascript" th:src="@{/jquery/js/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

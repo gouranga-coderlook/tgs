@@ -1,0 +1,212 @@
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+.wrapper {
+    display: flex;
+    width: 100%;
+	flex-shrink: 0;  
+	flex-grow: 1;
+}
+
+#sidebar {
+	padding-top: 5px;
+    width:183px;
+    position: absolute;
+    top:62px;
+    left: 0;
+    height: 100vh;
+   /*  z-index: 999; */
+    background: #2c3e50;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+
+
+#sidebar.active {
+    margin-left: -183px;
+}
+
+#sidebar .sidebar-header {
+   /*  padding: 20px;
+    background: #6d7fcc; */
+		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#feffff+0,f0f0f0+100 */
+	background: #feffff; /* Old browsers */
+	background: -moz-linear-gradient(top, #feffff 0%, #f0f0f0 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top, #feffff 0%,#f0f0f0 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom, #feffff 0%,#f0f0f0 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff', endColorstr='#f0f0f0',GradientType=0 ); /* IE6-9 */
+	padding:6px 0px;
+}
+
+/* #sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+} */
+
+/* #sidebar ul p {
+    color: #fff;
+    padding:10px;
+} */
+
+
+/* #sidebar ul {
+	margin-top:30px;
+} */
+
+
+#sidebar ul li a {
+    padding: 10px 0px 10px 10px;
+    font-size: 14px;
+    display: block;
+    color: #fff;
+    border-bottom: 1px solid #ced4da;
+} 
+
+#sidebar ul li:last-child a {
+	border-bottom:0px solid #566573;	
+}
+
+ #sidebar ul li a:hover {
+    color: #FFF;
+	background:#566573;
+	text-decoration:none;
+  /*   background: #fff; */
+}
+
+#sidebar ul.sub-menu {
+	margin-top:0px;
+}
+
+
+#sidebar ul.sub-menu li a {
+    padding: 10px 0px 10px 45px;
+}
+
+/*  #sidebar ul li.active>a,
+a[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc;
+}*/
+
+a[data-toggle="collapse"] {
+    position: relative;
+}  
+
+
+.dropdown-toggle::after {
+    /* display: none; */
+    position: absolute;
+    top: 50%;
+    right:20px;
+    transform: translateY(-50%);
+}
+
+a.dropdown-toggle[aria-expanded="true"]::after {
+	/* transform: translateY(20%); */
+	transform: rotateZ(-180deg);
+}
+
+
+/* ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
+}  */
+
+
+
+#sidebar ul li i.left-panel-icon {
+	font-size: 22px !important;
+	position:relative;
+	top:2px;
+	margin-right:10px;
+}
+
+
+ul.CTAs {
+    padding: 20px;
+}
+
+ul.CTAs a {
+    text-align: center;
+    font-size: 0.9em !important;
+    display: block;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+a.download {
+    background: #fff;
+    color: #7386D5;
+}
+
+a.article,
+a.article:hover {
+    background: #6d7fcc !important;
+    color: #fff !important;
+}
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
+#content {
+    width: calc(100% - 183px);
+    /* padding: 40px; */
+    min-height: 100vh;
+    transition: all 0.3s;
+    position: absolute;
+    top:62px;
+    right: 0;
+    background: #fff;
+}
+
+#content.active {
+    width: 100%;
+}
+
+
+
+.sidebarShow {
+	font-weight:bold;
+	cursor:pointer;
+}
+
+.hide {
+	display:none;
+}
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+
+@media (max-width: 768px) {
+	
+	.wrapper {
+    display: flex;
+    width: 100%;
+	}
+	
+	/* .topRow {
+		height: calc(100% - 62px) !important;
+	} */
+	
+    #sidebar {
+        margin-left: -183px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+    #content {
+        width: 100%;
+    }
+    #content.active {
+        width: calc(100% - 183px);
+    }
+    #sidebarCollapse span {
+        display: none;
+    }
+}

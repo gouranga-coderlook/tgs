@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header"></head>
+<body>
+
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-user-form">
+						<div class="row">
+							<div class="card col-md-7">
+								<div class="card-body">
+									<h5 class="card-title">My Profile</h5>
+
+									<div class="col-md-12">
+										<p>
+											Name:&nbsp;<span th:text="${sstUserAccountModel.sstUser.firstName} + ' '+ ${sstUserAccountModel.sstUser.lastName}"></span>
+										</p>
+									</div>
+									<div class="col-md-12">
+										<p>
+											EmployeeId:&nbsp;<span th:text="${sstUserAccountModel.sstUser.employeeId}"></span>
+										</p>
+									</div>
+
+									<div class="col-md-12">
+
+										<p>
+											Role:&nbsp;<span id="role" th:text="${sstUserAccountModel.sstUserAccount.sstAccount.userType.typeName}"></span>
+										</p>
+
+									</div>
+
+									<div class="col-md-12" id="bm-div">
+
+										<p>
+											Branch:&nbsp;<span id="branch" th:text="${sstUserAccountModel.branch}"></span>
+										</p>
+
+									</div>
+
+									<div class="col-md-12" id="asm-div">
+
+										<p>
+											ASM Zone:&nbsp;<span id="asmzone" th:text="${sstUserAccountModel.asmZone}"></span>
+										</p>
+
+									</div>
+
+									<div class="col-md-12" id="tr-div">
+
+										<p>
+											Territory:&nbsp;<span id="territory" th:text="${sstUserAccountModel.territory}"></span>
+										</p>
+
+									</div>
+								</div>
+							</div>
+
+							<div class="card col-md-5">
+								<div class="card-body">
+									<h5 class="card-title">Quick Links</h5>
+									<ul class="list-group list-group-flush">
+										<li class="list-group-item" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/admin/user/search}">Search User Account</a></li>
+										<li class="list-group-item" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/admin/user/add}">Add New User</a></li>
+										<li class="list-group-item" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/admin/user/unassigned-user}">Unassigned Accounts</a></li>
+										<li class="list-group-item" sec:authorize="hasRole('ROLE_USER')"><a th:href="@{/change-password}">Change My Password</a></li>
+										<li class="list-group-item" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/dashboard/downloadXML}">Download XML</a></li>
+										<li class="list-group-item" sec:authorize="hasRole('ROLE_BM')"><a th:href="@{/report/target/excel/}+'BM'">Download Total Target</a></li>
+										<li class="list-group-item" sec:authorize="hasRole('ROLE_ASM')"><a th:href="@{/report/target/excel/}+'ASM'">Download Total Target</a></li>
+										<li class="list-group-item" sec:authorize="hasRole('ROLE_SO')"><a th:href="@{/report/target/excel/}+'SO'">Download Total Target</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="footer">&copy; 2019 TGS Industries India Ltd. All Rights Reserved.</div>
+				</div>
+
+			</div>
+
+		</div>
+
+
+	</div>
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+			var userRole = '[[${sstUserAccountModel.sstUserAccount.sstAccount.userType.id}]]';
+
+			if (userRole != null && userRole == 2) {
+				$("#bm-div").show();
+				$("#asm-div").hide();
+				$("#tr-div").hide();
+
+			} else if (userRole != null && userRole == 3) {
+				$("#bm-div").show();
+				$("#asm-div").show();
+				$("#tr-div").hide();
+
+			} else if (userRole != null && userRole == 4) {
+				$("#bm-div").show();
+				$("#asm-div").show();
+				$("#tr-div").show();
+
+			} else {
+				$("#bm-div").hide();
+				$("#asm-div").hide();
+				$("#tr-div").hide();
+			}
+		});
+	</script>
+
+
+
+</body>
+</html>

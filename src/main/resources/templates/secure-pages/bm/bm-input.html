@@ -1,0 +1,324 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-data-table">
+
+</head>
+
+<body>
+
+	<div class="modal" id="myModal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<div class="modal-header text-white bg-danger">
+					<h5 class="modal-title">Change Initial Target</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true"><i class="fa fas-bar fa-times"></i></span>
+					</button>
+				</div>
+
+				<div class="modal-body">
+					<table style="width: 100%;">
+						<tbody style="font-size: 1.2em;">
+							<tr>
+								<td>LOB</td>
+								<td style="float: right; padding: 5px 15px;"><span id="lobLabel"></span>&nbsp;(<span id="lobcode"></span>)</td>
+							</tr>
+							
+							<tr>
+								<td>Budget Plan (BP) Input</td>
+								<td style="float: right; padding: 5px 15px;"><span id="bpinput"></span></td>
+							</tr>
+							<tr>
+								<td>BM Input Threshold</td>
+								<td style="float: right; padding: 5px 15px;" th:text="${bmInputTolerance} +'%'"></td>
+							</tr>
+							<tr>
+								<td>Initial Target</td>
+								<td><input type="text" id="input-target" class="form-control initialTarget" style="text-align: right;" value="0" placeholder="Initial Target"> <input type="hidden" id="lob"></td>
+							</tr>
+							<tr id="alert-minimum-input">
+								<td colspan="2"><span style="color: red;">Branch input cannot be less than branch BP</span></td>
+							</tr>
+							
+							
+						</tbody>
+					</table>
+
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" id="confirmValButton" onclick="return changeVal();" class="btn btn-danger confirmVal" disabled="disabled">Confirm</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-information-area">
+
+						<!-- <div class="col-sm-12 sst-target-details" th:insert="secure-pages/fragments/sst-target-details :: top-pannel"></div> -->
+
+						<table id="bm-input-table" class="table table-hover table-bordered dataTable">
+							<thead>
+								<tr class="table-primary">
+									<th>LOB</th>
+									<th style="display: none;">LOB Code</th>
+									<th>Description</th>
+									<th>BP</th>
+									<th>BM Input</th>
+
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="bmInput : ${bmInputList}" th:style="${bmInput.colorCode}">
+
+									<td th:if="${bmInput.colorCode}" title="This record has coressed the general BM input threshold limit! Ignore if you have entered the correct target!"><span><i class="fa fas-bar fa-exclamation-triangle"></i></span>
+										<span th:text="${bmInput.lob.costSectionCode}"></span>
+									</td>
+									<td th:if="${bmInput.colorCode}==null" th:text="${bmInput.lob.costSectionCode}"></td>
+									<td th:text="${bmInput.lob.costSectionCode}" style="display: none;"></td>
+									<td th:text="${bmInput.lob.description}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(bmInput.bpinput, 0, 'COMMA', 0, 'POINT')}" style=""></td>
+									<td class="dt-body-right"><span th:id="${bmInput.id.costSectionCode}+'_label'" th:text="${#numbers.formatDecimal(bmInput.initialTarget, 0, 'COMMA', 0, 'POINT')}"></span> <span th:if="${bmInput.status != '200'}"> <span
+											th:id="${bmInput.id.costSectionCode}+'_row'" class="icon-edit edit-bm-input" data-toggle="modal" data-target="#myModal"> <i class="fa fas-bar fa-edit"></i>
+										</span>
+									</span></td>
+								</tr>
+
+							</tbody>
+						</table>
+
+					</div>
+					<!-- .container-fluid ends -->
+					<div class="col-md-12">
+						<marquee scrollamount="3" th:text="'This form will remain open and editable till ' +${lastDateForInput}+'. If any LOB has Initial Target as 0 the BP Input will be considered as the Initial Input.'"></marquee>
+					</div>
+					<!-- <div class="col-md-12 text-right" style="margin-top: 20px;">
+						<button type="submit" class="btn btn-success" onclick="return confirmAllBmInput();">Confirm All</button>
+						<button type="button" class="btn btn-primary">Cancel</button>
+					</div> -->
+					<div class="footer">&copy; 2019 TGS Industries India Ltd. All Rights Reserved.</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::datatable-scripts"></span>
+	<script type="text/javascript">
+		var csrfParameter = '${_csrf.parameterName}';
+		var csrfToken = '${_csrf.token}';
+		(function($) {
+			$.fn.inputFilter = function(inputFilter) {
+				return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+					if (inputFilter(this.value)) {
+						this.oldValue = this.value;
+						this.oldSelectionStart = this.selectionStart;
+						this.oldSelectionEnd = this.selectionEnd;
+					} else if (this.hasOwnProperty("oldValue")) {
+						this.value = this.oldValue;
+						this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+					}
+				});
+			};
+		}(jQuery));
+	</script>
+	<script type="text/javascript">
+		$(".edit-bm-input").click(function() {
+			var $row = $(this).closest("tr");
+			lobcode = $row.find("td:nth-child(2)").text();
+			lobLabel = $row.find("td:nth-child(3)").text();
+			bp = $row.find("td:nth-child(4)").text();
+			it = $("#" + lobcode + "_label").text();
+			$("#lob").val(lobcode);
+			$('#lobcode').text(lobcode);
+			$('#lobLabel').text(lobLabel);
+			$('#bpinput').text(bp);
+			if (it == 0) {
+				it = bp;
+			}
+			it = it.replace(/\,/g, '');
+			it = Number(it);
+			$("#input-target").val(it);
+			$('#alert-minimum-input').hide();
+
+		});
+
+		$("#input-target").on("change paste keyup", function() {
+			bp = $('#bpinput').text();
+			bp = bp.replace(/\,/g, '');
+			bp = Number(bp);
+			if ($(this).val() >= bp) {
+				$('#confirmValButton').attr("disabled", false);
+				$('#alert-minimum-input').hide();
+			} else {
+				$('#confirmValButton').attr("disabled", true);
+				$('#alert-minimum-input').show();
+			}
+
+		});
+
+		$("#input-target").inputFilter(function(value) {
+			return /^\d*$/.test(value);
+		});
+
+		function editData(e) {
+			var rawId = e.split("_");
+			var id = rawId[0];
+			alert(id);
+
+			$("#lob").val(id);
+			var initialVal = $("#" + id).text();
+			$("#input-target").val(initialVal);
+			$('.modal').modal('hide');
+		}
+
+		$(document).ready(
+
+		function() {
+
+			// for datatable
+			$('#bm-input-table').DataTable({
+				dom : 'flBrtip',
+				buttons : [ {
+					extend : 'excelHtml5',
+					text : '<i class="fa fa-file-excel-o"></i>',
+					exportOptions : {
+						columns : [ 1, 2, 3, 4 ]
+					}
+				} ],
+				"paging" : true,
+				"ordering" : true,
+				"info" : true
+			});
+
+			// common popup
+
+		});
+
+		function changeVal() {
+			var initialTarget = $("#input-target").val();
+			var costSectionCode = $("#lob").val();
+
+			//alert("initialTarget :"+initialTarget+"costSectionCode:"+costSectionCode);
+			$("#" + costSectionCode + "_label").text(initialTarget);
+			$('.modal').modal('hide');
+
+			// PREPARE DATA
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			var jsonParams = {};
+			jsonParams['costSectionCode'] = $("#lob").val();
+			jsonParams['initialTarget'] = $("#input-target").val();
+
+			//alert(JSON.stringify(jsonParams))
+
+			$.ajax({
+				type : 'POST',
+				url : '[[@{/bm/rest/api/initial-input}]]',
+				contentType : 'application/json',
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				data : JSON.stringify(jsonParams),
+				success : function(result) {
+					checkThreshold();
+					console.log(result);
+				},
+				error : function(e) {
+					$.alert({
+						title : 'Error',
+						content : 'Update Failed!',
+						type : 'red',
+						typeAnimated : true,
+						buttons : {
+							ok : {
+								text : 'OK',
+								btnClass : 'btn-red',
+								action : function() {
+									location.reload();
+								}
+							}
+						}
+					});
+					console.log("ERROR: ", e);
+				}
+			});
+		}
+		
+		function checkThreshold() {
+			
+			inputval = $("#input-target").val();
+			
+			bp = $('#bpinput').text();
+			bp = bp.replace(/\,/g, '');
+			bp = Number(bp);
+			if (inputval >= bp) {
+				
+				changePercentage= ((inputval - bp)/bp)*100;
+				threshold='[[${bmInputTolerance}]]';
+				if(changePercentage>threshold){
+					$.confirm({
+						icon : 'fa fa-warning',
+						title : "Crossing Threshold!",
+						content : 'This request has coressed the general BM input threshold limit! Ignore if you have entered the correct target!',
+						buttons : {
+							ok : {
+								text : 'OK',
+								btnClass : 'btn-green',
+								action : function() {
+									location.reload();
+								}
+							}
+						}
+					});
+				}else{
+					$.alert({
+						title : 'Success',
+						content : 'Update Successfully!',
+						type : 'green',
+						typeAnimated : true,
+						buttons : {
+							ok : {
+								text : 'OK',
+								btnClass : 'btn-green',
+								action : function() {
+									location.reload();
+								}
+							}
+						}
+					});
+					console.log(result);
+				}
+				
+			} 
+
+		}
+	</script>
+
+</body>
+</html>

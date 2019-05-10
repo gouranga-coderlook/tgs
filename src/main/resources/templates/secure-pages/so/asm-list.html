@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-data-table">
+
+</head>
+
+<body>
+
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-information-area">
+
+						<div class="col-sm-12 sst-target-details" th:insert="secure-pages/fragments/sst-target-details :: top-pannel"></div>
+
+						<table id="bm-asm-table" class="table table-hover table-bordered dataTable">
+							<thead>
+								<tr class="table-primary">
+									<th>ASM Code</th>
+									<th>Zone Name</th>
+									<th>SST Vol System</th>
+									<th>SST Value System</th>
+									<th>SST Rate System</th>
+									<th>SST Vol Edit</th>
+									<!-- <th>SST Rate Edit</th> -->
+									<th>SST Value Edit</th>
+									<th>Action</th>
+
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="asmObj : ${asmList}">
+									<td th:style="${asmObj.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"><span th:if="${asmObj.colorCode == '1'}"><a><i class="fa fas-bar fa-exclamation-triangle"></i></a></span> <span> </span> <span
+										th:text="${asmObj.asmZone.code}"></span></td>
+									<td th:text="${asmObj.asmZone.name}" th:style="${asmObj.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"></td>
+
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(asmObj.sstVol, 0, 'COMMA', 0, 'POINT')}" th:style="${asmObj.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(asmObj.sstValue, 0, 'COMMA', 2, 'POINT')}" th:style="${asmObj.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(asmObj.sstRate, 0, 'COMMA', 2, 'POINT')}" th:style="${asmObj.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(asmObj.sstModVol, 0, 'COMMA', 0, 'POINT')}" th:style="${asmObj.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(asmObj.sstModValue, 0, 'COMMA', 2, 'POINT')}" th:style="${asmObj.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"></td>
+									<!-- <td class="dt-body-right" th:text="${#numbers.formatDecimal(asmObj.sstRate * asmObj.sstModVol, 0, 'COMMA', 2, 'POINT')}"></td> -->
+
+									<td th:style="${asmObj.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"><a th:href="@{${startUrl} + '/asmZone/' +${asmObj.asmZone.code}}" class="icon-edit"> <i
+											class="fa fas-bar fa-folder-open-o fa2"></i>
+									</a></td>
+								</tr>
+
+							</tbody>
+						</table>
+
+					</div>
+					<!-- .container-fluid ends -->
+
+					<div class="col-md-12 text-right" style="margin-top: 20px;">
+						<a class="btn btn-info" id="change-button" data-toggle="modal" data-target="#changeDestination" style="color: #fff;"><i class="fa fas-bar fa-search fa2"></i> Change Location</a>
+						<a class="btn btn-back" th:href="@{${backUrl}}">Back</a>
+						<button th:if="${showConfirmAll and isConfirmAll and adjusted}" type="submit" class="btn btn-success" onclick="return confAllTergetVol();">Confirm All</button>
+						<!-- <a class="btn btn-download" th:href="@{/report/target/excel/}+${type}">Download Total Target</a> -->
+						
+					</div>
+					<div class="footer">&copy; 2019 TGS Industries India Ltd. All Rights Reserved.</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::datatable-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::chnage-loc-scripts"></span>
+	<script type="text/javascript">
+		$(document).ready(
+
+		function() {
+
+			// for datatable
+			$('#bm-asm-table').DataTable({
+				dom: 'flBrtip',
+				buttons: [{
+	                extend: 'excelHtml5',
+	                text:   '<i class="fa fa-file-excel-o"></i>',
+	                exportOptions: {
+	                    columns: [0,1,2,3,4,5,6]
+	                }
+	            }],
+				"paging" : true,
+				"ordering" : true,
+				"info" : true/* ,
+												"scrollX" : true */,
+				"oLanguage" : {
+					"sSearch" : "Filter Result:"
+				}
+			});
+
+			$('#change-button').on('click', function() {
+
+			});
+
+			$('#submit-change').on('click', function() {
+				var val = $('#lobDorpdown').val();
+				alert('[[${type}]]' + ": " + val);
+
+			});
+
+			// for table
+			function setAsmList(lobCode) {
+
+				$.ajax({
+					type : "GET",
+					url : '[[@{/sstg/bm/lob/}]]' + lobCode,
+					dataType : 'json',
+					done : function(data) {
+						alert("success");
+					},
+					fail : function(ex) {
+						alert("fail");
+					}
+
+				});
+			}
+
+		});
+
+		function confAllTergetVol() {
+			// PREPARE DATA
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			var jsonParams = {};
+			jsonParams['geoLoc'] = '[[${branch.code}]]';
+			jsonParams['costSectionCode'] = '[[${lob.costSectionCode}]]';
+
+			$.ajax({
+				type : 'POST',
+				url : '[[@{/rest/api/branch/confirm-all-target}]]',
+				contentType : 'application/json',
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				data : JSON.stringify(jsonParams),
+				success : function(result) {
+
+					$.alert({
+						title : 'Success',
+						content : 'Update Successfully!',
+						type : 'green',
+						typeAnimated : true,
+						buttons : {
+							ok : {
+								text : 'OK',
+								btnClass : 'btn-green',
+								action : function() {
+									location.reload();
+								}
+							}
+						}
+					});
+					console.log(result);
+				},
+				error : function(e) {
+					$.alert({
+						title : 'Error',
+						content : 'Update Failed!',
+						type : 'red',
+						typeAnimated : true,
+						buttons : {
+							ok : {
+								text : 'OK',
+								btnClass : 'btn-red',
+								action : function() {
+									location.reload();
+								}
+							}
+						}
+					});
+					console.log("ERROR: ", e);
+				}
+			});
+		}
+	</script>
+</body>
+</html>

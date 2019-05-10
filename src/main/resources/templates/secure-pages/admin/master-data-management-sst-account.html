@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-data-table"></head>
+<body>
+
+
+	<div class="modal" id="importFile">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header text-white bg-danger">
+					<h5 class="modal-title">Change Initial Target</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true"><i class="fa fas-bar fa-times"></i></span>
+					</button>
+				</div>
+				<form method="post" enctype="multipart/form-data" id="fileupload">
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="Initial Target">Import CSV file</label> <input type="file" class="form-control " placeholder="Import CSV File" name="masterFile" /> <input type="hidden" class="form-control " placeholder="Import CSV File"
+								name="tableName" value="ACCOUNT" /> <input type="hidden" class="form-control " placeholder="Import CSV File" name="updateBy" id="updateBy" />
+
+						</div>
+					</div>
+					<div class="modal-footer">
+
+						<button type="submit" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						<button type="button" class="btn btn-danger confirmVal" id="upload">Submit</button>
+
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-user-form">
+
+						<div class="container-fluid data-table-area">
+
+							<div th:insert="secure-pages/fragments/import-csv :: importcsv"></div>
+
+							<table id="asm-zone-table" class="table table-hover table-bordered dataTable">
+								<thead>
+									<tr class="table-primary">
+										<th>Login Id</th>
+										<th>Location Type</th>
+										<th>Location Code</th>
+										<th>User Type Id</th>
+										<th>User Type Name</th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr th:each="account : ${accounts}">
+										<td th:text="${account.loginId}"></td>
+										<td th:text="${account.geoLocType}"></td>
+										<td th:text="${account.geoLocCode}"></td>
+										<td th:text="${account.userType.id}"></td>
+										<td th:text="${account.userType.typeName}"></td>
+									</tr>
+								</tbody>
+							</table>
+
+						</div>
+
+					</div>
+
+					<div class="footer">(c) 2018-2019 . All Rights Reserved.</div>
+
+				</div>
+
+			</div>
+
+
+		</div>
+
+
+	</div>
+
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::datatable-scripts"></span>
+	<script type="text/javascript">
+		$(document).ready(
+
+		function() {
+
+			// for datatable
+			$('#asm-zone-table').DataTable({
+				"paging" : true,
+				"ordering" : true,
+				"info" : true
+			});
+
+		});
+	</script>
+	<script type="text/javascript">
+		var csrfParameter = '${_csrf.parameterName}';
+		var csrfToken = '${_csrf.token}';
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#updateBy').val('[[${session?.loggedInUser?.id}]]');
+			value = "${session?.loggedInUser?.id}"
+
+			$("#upload").click(function(event) {
+				fire_ajax_submit();
+			});
+		});
+
+		function fire_ajax_submit() {
+
+			// Get form
+			var form = $('#fileupload')[0];
+			var data = new FormData(form);
+			// PREPARE DATA
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			$.ajax({
+				type : "POST",
+				enctype : 'multipart/form-data',
+				url : '[[@{/master-data/rest/api/upload}]]',
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				data : data,
+				processData : false, //prevent jQuery from automatically transforming the data into a query string
+				contentType : false,
+				cache : false,
+				timeout : 600000,
+				success : function(data) {
+					console.log("SUCCESS : ", data);
+					/* $("#result").text(data);
+					alert
+					$("#btnSubmit").prop("disabled", false); */
+					alert("Upload successful");
+					location.reload();
+				},
+				error : function(e) {
+					console.log("ERROR : ", e);
+					/* $("#result").text(e.responseText);
+					
+					$("#btnSubmit").prop("disabled", false); */
+
+				}
+			});
+
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-data-table"></head>
+<body>
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-user-form">
+
+						<div class="header">
+							<p class="PageTitle">Search Unmapped User</p>
+						</div>
+
+						<form class="row" action="#" th:action="@{unassigned-user}" th:object="${notMappedModel}" method="post">
+
+
+							<div class="col-md-4 col-sm-6">
+								<div class="form-group">
+									<label for="First Name">First Name</label> <input type="text" class="form-control" id="firstName" placeholder="Enter First Name" th:field="*{firstName}">
+								</div>
+							</div>
+
+							<div class="col-md-4 col-sm-6">
+								<div class="form-group">
+									<label for="Last Name">Middle Name</label> <input type="text" class="form-control" id="middleName" placeholder="Enter Last Name" th:field="*{middleName}">
+								</div>
+							</div>
+
+							<div class="col-md-4 col-sm-6">
+								<div class="form-group">
+									<label for="Last Name">Last Name</label> <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name" th:field="*{lastName}">
+								</div>
+							</div>
+
+							<div class="col-md-4 col-sm-6">
+								<div class="form-group">
+									<label for="Employee Id">Employee Id</label> <input type="text" class="form-control" id="EmpId" placeholder="Enter Employee Id" th:field="*{empId}">
+								</div>
+							</div>
+
+							<div class="col-md-4 col-sm-6">
+								<div class="form-group">
+									<input type="submit" value="Search" class="btn btn-success" style="margin-top: 30px;" />
+								</div>
+							</div>
+						</form>
+
+
+						<div class="container-fluid data-table-area">
+
+							<table id="user-table" class="table table-hover table-bordered dataTable">
+								<thead>
+									<tr class="table-primary">
+										<th>FIRST NAME</th>
+										<th>MIDDLE NAME</th>
+										<th>LAST NAME</th>
+										<th>EMPLOYEE ID</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr th:each="user : ${userList}">
+										<td th:text="${user.firstName}"></td>
+										<td th:text="${user.middleName}"></td>
+										<td th:text="${user.lastName}"></td>
+										<td th:text="${user.employeeId}"></td>
+										<td><a th:href="@{'/admin/user/' + ${user.id} + '/edit?account=unassigned'}" class="icon-edit"> <i class="fa fas-bar fa-edit"></i></a></td>
+									</tr>
+
+								</tbody>
+							</table>
+
+						</div>
+
+					</div>
+
+					<div class="footer">(c) 2018-2019 . All Rights Reserved.</div>
+
+				</div>
+
+			</div>
+
+
+		</div>
+
+
+	</div>
+
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::datatable-scripts"></span>
+	<script type="text/javascript">
+		$(document).ready(
+
+		function() {
+
+			// for datatable
+			$('#user-table').DataTable({
+				"paging" : true,
+				"ordering" : true,
+				"info" : true
+			});
+
+			function refreshParent() {
+				window.location.reload();
+			}
+
+		});
+	</script>
+
+</body>
+</html>

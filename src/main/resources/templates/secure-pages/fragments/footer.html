@@ -1,0 +1,83 @@
+<span th:fragment="page-scripts"> <script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script> <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script> <script type="text/javascript"
+		th:src="@{/js/jquery.validate.min.js}"></script> <script type="text/javascript" th:src="@{/js/jquery-confirm.min.js}"></script> <script type="text/javascript">
+			$(document).ready(function() {
+
+				$('#sidebarCollapse').on('click', function() {
+					$('#sidebar, #content').toggleClass('active');
+					$('.collapse.in').toggleClass('in');
+					$('a[aria-expanded=true]').attr('aria-expanded', 'false');
+				});
+
+				$(".dropdown-toggle").each(function() {
+
+					$(this).on('click', function() {
+
+						var ifShow = $(this).siblings(".sub-menu").hasClass('show');
+						console.log(ifShow);
+
+						if (!ifShow) {
+							//$(".sub-menu").slideUp("slow").removeClass("show");
+							$(".sub-menu").removeClass("show");
+							$(this).siblings(".sub-menu").removeClass('show');
+							$('a[aria-expanded=true]').attr('aria-expanded', 'false');
+
+						}
+
+						else {
+							$(this).siblings(".sub-menu").addClass('show');
+						}
+
+						//alert("weeeeeeeeeee");
+
+					});
+				});
+			});
+		</script>
+</span>
+
+<span th:fragment="datatable-scripts">
+	<script type="text/javascript" th:src="@{/js/jquery.dataTables.min.js}"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+	<script type="text/javascript" th:src="@{/js/dataTables.fixedColumns.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/dataTables.fixedHeader.min.js}"></script>
+</span>
+
+<span th:fragment="chnage-loc-scripts"> <script type="text/javascript">
+	$.ajax({
+		type : 'GET',
+		url : '[[@{/master-data/rest/api/lob/active}]]',
+		dataType : 'json',
+		success : function(data) {
+			result = data;
+			$.each(result, function() {
+				$('#lobSelect').append($("<option></option>").text(this.description + ' (' + this.costSectionCode + ')').val(this.costSectionCode));
+			});
+		}
+	});
+	function changeLoc() {
+		var lobId = $('#lobSelect').val();
+		var locType = $('#locTypeDropDown').val();
+		var code = $('#locCode').val();
+		var name = $('#locName').val();
+		$("#search-result tbody").empty();
+		var context = '[[@{/}]]';
+		$.ajax({
+			type : 'GET',
+			url : '[[@{/master-data/rest/api/search/location?lob=}]]' + lobId + '&locType=' + locType + '&code=' + code + '&name=' + name,
+			dataType : 'json',
+			success : function(data) {
+				result = data;
+				$.each(result, function() {
+					//alert(JSON.stringify(result));					
+					tr = '<tr><td>' + this.code.string + '</td><td>' + this.name.string + '</td><td><a href="http://localhost:7080'+this.url.string+'" class="icon-edit"> <i class="fa fas-bar fa-folder-open-o fa2"></i></a></td></tr>';
+					$("#search-result tbody").append(tr);
+				});
+			}
+		});
+
+	}
+</script>
+</span>

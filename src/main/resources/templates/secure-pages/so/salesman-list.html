@@ -1,0 +1,581 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-data-table">
+
+</head>
+
+<body>
+
+	<div class="modal" id="myModal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<div class="modal-header text-white bg-danger">
+					<h5 class="modal-title">Change SST Vol</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true"><i class="fa fas-bar fa-times"></i></span>
+					</button>
+				</div>
+
+				<div class="modal-body">
+					<table style="width: 100%;">
+						<tbody style="font-size: 1.2em;">
+							<tr>
+								<td>LOB</td>
+								<td style="float: right; padding: 5px 15px;"><span th:text="${lob.description}"></span>&nbsp;(&nbsp;<span style="margin-left: 0px;" th:text="${lob.costSectionCode}"></span>)</td>
+							</tr>
+							<tr>
+								<td>Salesman</td>
+								<td style="float: right; padding: 5px 15px;"><span id="salesmanCode"></span></td>
+							</tr>
+							<tr>
+								<td th:if="${type}=='BM'">Branch Total Target</td>
+								<td th:if="${type}=='ASM'">ASM Zone Total Target</td>
+								<td th:if="${type}=='SO'">Territory Total Target</td>
+								<td style="float: right; padding: 5px 15px;"><span id="totalTarget_dialog" th:text="${totalTarget}"></span></td>
+							</tr>
+							<tr>
+								<td>Adjustment Required</td>
+								<td style="float: right; padding: 5px 15px;"><span id="adjustMentRequired_dialog" th:text="${adjustment}"></span></td>
+							</tr>
+							<tr>
+								<td>SST System Vol</td>
+								<td style="float: right; padding: 5px 15px;"><span id="sstVol"></span></td>
+							</tr>
+							<tr>
+								<td>Modified Vol by ASM</td>
+								<td style="float: right; padding: 5px 15px;"><span id="sstModVolAsm"></span></td>
+							</tr>
+							<tr>
+								<td>Modified Vol by SO</td>
+								<td style="float: right; padding: 5px 15px;"><span id="sstModVolSo"></span></td>
+							</tr>
+							<tr>
+								<td>Edit SST Vol</td>
+								<td style="float: right; padding: 5px 15px;"><input type="text" id="sstModVol" class="form-control" style="text-align: right;" placeholder="SST Vol"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" onclick="return changeVol();" class="btn btn-danger confirmVal">Confirm</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-information-area">
+						<div class="col-sm-12 sst-target-details" th:insert="secure-pages/fragments/sst-target-details :: top-pannel"></div>
+						<table id="so-salesman-table" class="table table-hover table-bordered dataTable">
+							<thead>
+								<tr class="table-primary">
+									<th>SLM Code</th>
+									<th>Salesman Name</th>
+									<th>SST Vol System</th>
+									<th>SST Value System</th>
+									<th>SST Rate System</th>
+									<th>SST Vol Edit</th>
+									<th>SST Value Edit</th>
+									<th style="display: none;">SST Vol Edit BM</th>
+									<th style="display: none;">SST Vol Edit ASM</th>
+									<th style="display: none;">SST Vol Edit SO</th>
+									<th style="display: none;">BM Status</th>
+									<th style="display: none;">ASM Status</th>
+									<th style="display: none;">SO Status</th>
+									<th>Action</th>
+									<th style="display: none;">Salesman Status</th>
+
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="salesman : ${salesmanList}" th:classappend="${salesman.salesmanStatus}=='inactive' ? inactive-record : active-record">
+									<td th:text="${salesman.salesman.code}"></td>
+									<td th:text="${salesman.salesman.name}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(salesman.sstVol, 0, 'COMMA', 0, 'POINT')}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(salesman.sstValue, 0, 'COMMA', 2, 'POINT')}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(salesman.sstRate, 0, 'COMMA', 2, 'POINT')}"></td>
+									<td class="dt-body-right"><span th:if="${showConfirmAll} == false or (${type}=='BM' and ${salesman.bmStatus==null}) or (${type}=='ASM' and ${salesman.asmStatus==null}) or (${type}=='SO' and ${salesman.soStatus==null})"
+										class="initVol" th:text="${#numbers.formatDecimal(salesman.sstModVol, 0,'COMMA', 0, 'POINT')}" th:id="${salesman.salesman.code}+'_modvol'"></span> <span th:if="${type}=='BM' and ${salesman.bmStatus}=='100' and ${showConfirmAll}"
+										th:text="${#numbers.formatDecimal(salesman.sstModVolBm, 0,'COMMA', 0, 'POINT')}" th:id="${salesman.salesman.code}+'_modvol'"></span> <span th:if="${type}=='ASM' and ${salesman.asmStatus}=='100' and ${showConfirmAll}"
+										th:text="${#numbers.formatDecimal(salesman.sstModVolAsm, 0,'COMMA', 0, 'POINT')}" th:id="${salesman.salesman.code}+'_modvol'"></span> <span th:if="${type}=='SO' and ${salesman.soStatus}=='100' and ${showConfirmAll}"
+										th:text="${#numbers.formatDecimal(salesman.sstModVolSo, 0,'COMMA', 0, 'POINT')}" th:id="${salesman.salesman.code}+'_modvol'"></span> <span th:if="${showConfirmAll}" class="icon-edit" data-toggle="modal" data-target="#myModal"><i
+											class="fa fas-bar fa-edit"></i></span></td>
+									<td style="display: none;" th:text="${salesman.sstModVolBm}" th:id="${salesman.salesman.code}+'_bmvol'"></td>
+									<td style="display: none;" th:text="${salesman.sstModVolAsm}" th:id="${salesman.salesman.code}+'_asmvol'"></td>
+									<td style="display: none;" th:text="${salesman.sstModVolSo}" th:id="${salesman.salesman.code}+'_sovol'"></td>
+									<td style="display: none;" th:text="${salesman.bmStatus}" th:id="${salesman.salesman.code}+'_bmstatus'"></td>
+									<td style="display: none;" th:text="${salesman.asmStatus}" th:id="${salesman.salesman.code}+'_asmstatus'"></td>
+									<td style="display: none;" th:text="${salesman.soStatus}" th:id="${salesman.salesman.code}+'_sostatus'"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(salesman.sstModValue, 0, 'COMMA', 2, 'POINT')}"></td>
+									<td><a th:href="@{${startUrl} + '/salesman/' + ${salesman.salesman.code}}" class="icon-edit"> <i class="fa fas-bar fa-folder-open-o fa2"></i>
+									</a></td>
+									<td style="display: none;" th:text="${salesman.salesmanStatus}"></td>
+								</tr>
+
+							</tbody>
+						</table>
+
+					</div>
+					<!-- .container-fluid ends -->
+
+					<div class="col-md-12 text-right" style="margin-top: 20px;">
+						<a class="btn btn-info" id="change-button" data-toggle="modal" data-target="#changeDestination" style="color: #fff;"><i class="fa fas-bar fa-search fa2"></i> Change Location</a> <a class="btn btn-back" th:href="@{${backUrl}}">Back</a>
+						<button th:if="${showConfirmAll and adjusted}" type="submit" class="btn btn-success" onclick="return confAllTergetVol();">Confirm All</button>
+						<!-- <a class="btn btn-download" th:href="@{/report/target/excel/}+${type}">Download Total Target</a> -->
+					</div>
+					<div class="footer">&copy; 2019 TGS Industries India Ltd. All Rights Reserved.</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::datatable-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::chnage-loc-scripts"></span>
+	<script type="text/javascript">
+		var csrfParameter = '${_csrf.parameterName}';
+		var csrfToken = '${_csrf.token}';
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			// for datatable
+			$('#so-salesman-table').DataTable({
+				dom : 'flBrtip',
+				buttons : [ {
+					extend : 'excelHtml5',
+					text : '<i class="fa fa-file-excel-o"></i>',
+					exportOptions : {
+						columns : [ 0, 1, 2, 3, 4, 5, 6, 14 ]
+					}
+				} ],
+				"paging" : true,
+				"ordering" : true,
+				"info" : true,
+				"oLanguage" : {
+					"sSearch" : "Filter Result:"
+				}
+			});
+
+			$('#change-button').on('click', function() {
+
+			});
+
+			// lob change
+			$('#lobDropdown').on('change', function() {
+				if (this.value != null) {
+					var type = '[[${type}]]';
+					if (type == "BM") {
+						$('#asmDorpdown').empty();
+						$('#asmDorpdown').append($("<option label='Select ASM Zone' value=''></option>"));
+
+						getAsmZoneList(this.value);
+					} else if (type == "ASM") {
+						$('#terDorpdown').empty();
+						$('#terDorpdown').append($("<option label='Select Territory' value=''></option>"));
+						getTerritoryListByLobId(this.value);
+					} else if (type == "SO") {
+						$('#distDorpdown').empty();
+						$('#distDorpdown').append($("<option label='Select Distributor' value=''></option>"));
+						getDistributorListByLobId(this.value);
+
+					}
+
+				}
+			});
+			// for asm dropdown
+			function getAsmZoneList(lobId) {
+
+				alert('[[${type}]]' + ": " + lobId);
+
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/bm/rest/api/asm?lobId=}]]' + lobId,
+					dataType : 'json',
+					success : function(data) {
+						$('#asmDorpdown').empty();
+						$('#asmDorpdown').append($("<option label='Select ASM Zone' value=''></option>"));
+						asmZones = data;
+						$.each(asmZones, function() {
+							$('#asmDorpdown').append($("<option></option>").text(this.asmZone.name).val(this.asmZone.code));
+
+						});
+					}
+				});
+			}
+
+			function getTerritoryListByLobId(lobId) {
+
+				alert('[[${type}]]' + ": " + lobId);
+
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/asm/rest/api/territory?lobId=}]]' + lobId,
+					dataType : 'json',
+					success : function(data) {
+						$('#terDorpdown').empty();
+						$('#terDorpdown').append($("<option label='Select Territory' value=''></option>"));
+						terList = data;
+						$.each(terList, function() {
+							$('#terDorpdown').append($("<option></option>").text(this.territory.name).val(this.territory.code));
+
+						});
+					}
+				});
+			}
+
+			// asm change
+			$('#asmDorpdown').on('change', function() {
+				if (this.value != null) {
+
+					var lobId = $('#lobDropdown').val();
+
+					$('#terDorpdown').empty();
+					$('#terDorpdown').append($("<option label='Select Territory' value=''></option>"));
+
+					getTerritoryListByAsmIdAndLob(lobId, this.value);
+				}
+			});
+			function getTerritoryListByAsmIdAndLob(lobId, asmCode) {
+
+				alert(lobId + " : " + asmCode);
+
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/bm/rest/api/territory?lobId=}]]' + lobId + '&asmCode=' + asmCode,
+					dataType : 'json',
+					success : function(data) {
+						$('#terDorpdown').empty();
+						$('#terDorpdown').append($("<option label='Select Territory' value=''></option>"));
+						terList = data;
+						$.each(terList, function() {
+							$('#terDorpdown').append($("<option></option>").text(this.territory.name).val(this.territory.code));
+
+						});
+					}
+				});
+
+			}
+
+			// get distributor list by lob
+			function getDistributorListByLobId(lobId) {
+
+				alert(lobId);
+
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/so/rest/api/distributor?lobId=}]]' + lobId,
+					dataType : 'json',
+					success : function(data) {
+						$('#distDorpdown').empty();
+						$('#distDorpdown').append($("<option label='Select Distributor' value=''></option>"));
+						distributors = data;
+						$.each(distributors, function() {
+							$('#distDorpdown').append($("<option></option>").text(this.distributor.name).val(this.distributor.code));
+
+						});
+					}
+				});
+
+			}
+			// asm change
+			$('#terDorpdown').on('change', function() {
+				if (this.value != null) {
+
+					var lobId = $('#lobDropdown').val();
+
+					$('#distDorpdown').empty();
+					$('#distDorpdown').append($("<option label='Select Distributor' value=''></option>"));
+
+					getDistributorListByTerritory(lobId, this.value);
+				}
+			});
+			function getDistributorListByTerritory(lobId, code) {
+				var type = '[[${type}]]';
+
+				if (type == "BM") {
+
+					$.ajax({
+						type : 'GET',
+						url : '[[@{/bm/rest/api/distributor?lobId=}]]' + lobId + '&territoryCode=' + code,
+						dataType : 'json',
+						success : function(data) {
+							$('#distDorpdown').empty();
+							$('#distDorpdown').append($("<option label='Select Distributor' value=''></option>"));
+							distributors = data;
+							$.each(distributors, function() {
+								$('#distDorpdown').append($("<option></option>").text(this.distributor.name).val(this.distributor.code));
+
+							});
+						}
+					});
+
+				} else if (type == "ASM") {
+
+					$.ajax({
+						type : 'GET',
+						url : '[[@{/asm/rest/api/distributor?lobId=}]]' + lobId + '&territoryCode=' + code,
+						dataType : 'json',
+						success : function(data) {
+							$('#distDorpdown').empty();
+							$('#distDorpdown').append($("<option label='Select Distributor' value=''></option>"));
+							distributors = data;
+							$.each(distributors, function() {
+								$('#distDorpdown').append($("<option></option>").text(this.distributor.name).val(this.distributor.code));
+
+							});
+						}
+					});
+
+				}
+
+			}
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			// common popup for value
+			$(".fa-edit").each(function() {
+
+				$(this).on('click', function() {
+					var type = '[[${type}]]';
+					var $row = $(this).closest("tr");
+					var salesmanCode = $row.find("td:nth-child(1)").text();
+					var sstVol = $row.find("td:nth-child(3)").text();
+
+					var sstModVol = $('#' + salesmanCode + '_modvol').text();
+					var sstModVolBm = $row.find("td:nth-child(7)").text();
+					var sstModVolAsm = $row.find("td:nth-child(8)").text();
+					var sstModVolSo = $row.find("td:nth-child(9)").text();
+
+					var bmStatus = $row.find("td:nth-child(10)").text();
+					var asmStatus = $row.find("td:nth-child(11)").text();
+					var soStatus = $row.find("td:nth-child(12)").text();
+
+					sstModVol = sstModVol.replace(/\,/g, '');
+					sstModVol = Number(sstModVol);
+
+					$('#salesmanCode').text(salesmanCode);
+					$('#sstVol').text(sstVol);
+					$('#sstModVol').val(sstModVol);
+
+					if (asmStatus.trim() != '' && asmStatus == '200') {
+						$('#sstModVolAsm').text(sstModVolAsm);
+					} else {
+						$('#sstModVolAsm').text('Not Submitted');
+					}
+					if (soStatus.trim() != '' && soStatus == '200') {
+						$('#sstModVolSo').text(sstModVolSo);
+					} else {
+						$('#sstModVolSo').text('Not Submitted');
+					}
+
+					/* bp = $row.find("td:nth-child(4)").text();
+					it = $("#" + lobcode + "_label").text();
+					$("#lob").val(lobcode);
+					$('#lobcode').text(lobcode);
+					$('#lobLabel').text(lobLabel);
+					$('#bpinput').text(bp);
+					if (it == 0) {
+						it = bp;
+					}
+					it = it.replace(/\,/g, '');
+					it = Number(it);
+					$("#input-target").val(it);
+					$('#alert-minimum-input').hide();
+					
+					var getId = $(this).parents().siblings(".initVol").attr("id");
+
+
+
+					var soStatus = $(this).parents().siblings(".soStatus").text();
+
+					var asmStatus = $(this).parents().siblings(".asmStatus").text();
+
+					if (type == 'BM') {
+						if (soStatus == '') {
+							$('#so-as-type-bm').css("display", "none");
+						} else {
+							$('#so-as-type-bm').css("display", "block");
+						}
+
+						if (asmStatus == '' || asmStatus == '100') {
+							$('#sstVolByAsmGroup').hide();
+						} else {
+							$('#sstVolByAsmGroup').show();
+						}
+
+					}
+					if (type == 'BM' || type == 'ASM') {
+						if (soStatus == '' || soStatus == '100') {
+							$('#sstVolBySoGroup').hide();
+						} else {
+							$('#sstVolBySoGroup').show();
+						}
+					}
+
+					$(".modal").find(".sstVolByAsm").val(sstModVolAsm);
+					$(".modal").find(".sstVolBySo").val(sstModVolSo);
+					$(".modal").find(".spanId").val(getId);
+
+					var initialVal = $("#" + getId).text();
+
+					$(".modal").find(".initialTarget").val(initialVal);
+
+					$('.modal').modal('hide');
+					 */
+				});
+			});
+		});
+
+		function aceptAsm() {
+			var valueOfAsm = $(".sstVolByAsm").val();
+			$(".modal").find(".initialTarget").val(valueOfAsm);
+		}
+
+		function aceptSo() {
+			var valueOfAsm = $(".sstVolBySo").val();
+			$(".modal").find(".initialTarget").val(valueOfAsm);
+		}
+
+		function changeVol() {
+			var sstModVol = $("#sstModVol").val();
+			var salesmanCode = $('#salesmanCode').text();
+			$('#' + salesmanCode + '_modvol').text(sstModVol);
+			$('.modal').modal('hide');
+
+			// PREPARE DATA
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			var jsonParams = {};
+			jsonParams['type'] = '[[${type}]]';
+			jsonParams['lobId'] = '[[${lob.costSectionCode}]]';
+			jsonParams['slmId'] = salesmanCode;
+			jsonParams['sstVol'] = $("#sstModVol").val();
+			$.ajax({
+				type : 'POST',
+				url : '[[@{/slm/rest/api/salesman-list}]]',
+				contentType : 'application/json',
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				data : JSON.stringify(jsonParams),
+				success : function(result) {
+					$.alert({
+						title : 'Success',
+						content : 'Update Successfully!',
+						type : 'green',
+						typeAnimated : true,
+						buttons : {
+							ok : {
+								text : 'OK',
+								btnClass : 'btn-green',
+								action : function() {
+									location.reload();
+								}
+							}
+						}
+					});
+					console.log(result);
+				},
+				error : function(e) {
+					$.alert({
+						title : 'Error',
+						content : 'Update Failed!',
+						type : 'red',
+						typeAnimated : true,
+						buttons : {
+							ok : {
+								text : 'OK',
+								btnClass : 'btn-red',
+								action : function() {
+									location.reload();
+								}
+							}
+						}
+					});
+					console.log("ERROR: ", e);
+				}
+			});
+		}
+
+		function confAllTergetVol() {
+			// PREPARE DATA
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			var jsonParams = {};
+			jsonParams['geoLoc'] = '[[${distributor.code}]]';
+			jsonParams['costSectionCode'] = '[[${lob.costSectionCode}]]';
+
+			$.ajax({
+				type : 'POST',
+				url : '[[@{/slm/rest/api/confirm-all-target}]]',
+				contentType : 'application/json',
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				data : JSON.stringify(jsonParams),
+				success : function(result) {
+
+					$.alert({
+						title : 'Success',
+						content : 'Update Successfully!',
+						type : 'red',
+						typeAnimated : true,
+						buttons : {
+							ok : {
+								text : 'OK',
+								btnClass : 'btn-red',
+								action : function() {
+									location.reload();
+								}
+							}
+						}
+					});
+					console.log(result);
+				},
+				error : function(e) {
+					$.alert({
+						title : 'Error',
+						content : 'Update Failed!',
+						type : 'red',
+						typeAnimated : true,
+						buttons : {
+							ok : {
+								text : 'OK',
+								btnClass : 'btn-red',
+								action : function() {
+									location.reload();
+								}
+							}
+						}
+					});
+					console.log("ERROR: ", e);
+				}
+			});
+		}
+	</script>
+
+</body>
+</html>

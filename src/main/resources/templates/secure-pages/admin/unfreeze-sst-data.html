@@ -1,0 +1,539 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-data-table"></head>
+<body>
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+
+			<div class="row">
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-user-form">
+
+						<div class="header">
+							<p class="PageTitle">Unfreeze SST Data</p>
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<select class="form-control" id="dropUnlockOperator">
+									<option value="0">Select Unlock Option</option>
+									<option value="1">Unlock for Branch</option>
+									<option value="2">Unlock for Asm Zone</option>
+									<option value="3">Unlock for Territory</option>
+									<option value="4">Unlock for Distributor</option>
+								</select>
+							</div>
+
+						</div>
+
+						<br>
+
+						<div id="branch-div">
+
+							<div class="header">
+								<p class="PageTitle">Unlock Level Branch</p>
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="Select Branch">Select Branch</label> <select class="form-control" id="branchForBranch">
+											<option label="Select Branch" value=""></option>
+											<option th:each="branch : ${branchs}" th:value="${branch.code}" th:utext="${branch.name}+' ('+${branch.code}+')'"></option>
+										</select>
+									</div>
+								</div>
+
+							</div>
+
+							<!-- unlock for  -->
+							<div th:insert="secure-pages/fragments/unlock-for :: unlockFor"></div>
+
+						</div>
+
+						<div id="asm-div">
+							<div class="header">
+								<p class="PageTitle">Unlock Level Asm Zone</p>
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="Select Branch">Select Branch</label> <select class="form-control" id="branchForAsm">
+											<option label="Select Branch" value=""></option>
+											<option th:each="branch : ${branchs}" th:value="${branch.code}" th:utext="${branch.name}+' ('+${branch.code}+')'"></option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="Select ASM Zone">Select ASM Zone</label> <select class="form-control" id="asmForAsm">
+											<option label="Select ASM Zone" value=""></option>
+											<option th:each="asmZone : ${asmZones}" th:value="${asmZone.code}" th:utext="${asmZone.name}" th:selected="${asmZone.code==asmZoneCode}"></option>
+										</select>
+									</div>
+								</div>
+
+							</div>
+							<!-- unlock for  -->
+							<div th:insert="secure-pages/fragments/unlock-for :: unlockFor"></div>
+						</div>
+
+						<div id="territory-div">
+							<div class="header">
+								<p class="PageTitle">Unlock Level Territory</p>
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="Select Branch">Select Branch</label> <select class="form-control" id="branchForSo">
+											<option label="Select Branch" value=""></option>
+											<option th:each="branch : ${branchs}" th:value="${branch.code}" th:utext="${branch.name}+' ('+${branch.code}+')'"></option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="Select ASM Zone">Select ASM Zone</label> <select class="form-control" id="asmForSo">
+											<option label="Select ASM Zone" value=""></option>
+											<option th:each="asmZone : ${asmZones}" th:value="${asmZone.code}" th:utext="${asmZone.name}" th:selected="${asmZone.code==asmZoneCode}"></option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="Select Territory">Select Territory</label> <select class="form-control" id="territoryForSo">
+											<option label="Select Territory" value=""></option>
+											<option th:each="territory : ${territories}" th:value="${territory.code}" th:utext="${territory.name}" th:selected="${territory.code==territoryCode}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<!-- unlock for  -->
+							<div th:insert="secure-pages/fragments/unlock-for :: unlockFor"></div>
+						</div>
+
+						<div id="distributor-div">
+							<div class="header">
+								<p class="PageTitle">Unlock Level Distributer</p>
+							</div>
+							<div class="row">
+
+								<div class="col-md-3">
+									<div class="form-group">
+										<label for="Distributor">Distributor Code</label> <input type="text" class="form-control" id="distributorCode" placeholder="Distributor Code">
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="form-group">
+										<label for="Distributor">Distributor Name</label> <input type="text" class="form-control" id="distributorName" placeholder="Distributor Name">
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="form-group">
+										<input type="submit" value="Search" class="btn btn-success" id="search-dist" style="margin-top: 30px;" />
+									</div>
+
+								</div>
+
+							</div>
+							<!-- <div class="row">
+								<p>Or</p>
+							</div> -->
+							<!-- <div class="row">
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="Select Branch">Select Branch</label> <select class="form-control" id="branch">
+											<option label="Select Branch" value=""></option>
+											<option th:each="branch : ${branchs}" th:value="${branch.code}" th:utext="${branch.name}"></option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="Select ASM Zone">Select ASM Zone</label> <select class="form-control" id="asm">
+											<option label="Select ASM Zone" value=""></option>
+											<option th:each="asmZone : ${asmZones}" th:value="${asmZone.code}" th:utext="${asmZone.name}" th:selected="${asmZone.code==asmZoneCode}"></option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="Select Territory">Select Territory</label> <select class="form-control" id="territory">
+											<option label="Select Territory" value=""></option>
+											<option th:each="territory : ${territories}" th:value="${territory.code}" th:utext="${territory.name}" th:selected="${territory.code==territoryCode}"></option>
+										</select>
+									</div>
+								</div>
+							</div> -->
+							<div class="container-fluid data-table-area">
+
+								<table id="dist-table" class="table table-hover table-bordered dataTable">
+									<thead>
+										<tr class="table-primary">
+											<th>Distributor Code</th>
+											<th>Name</th>
+											<th>Unlock BM</th>
+											<th>Unlock ASM</th>
+											<th>Unlock SO</th>
+										</tr>
+									</thead>
+
+									<tbody>
+										<!-- <tr th:each="dis : ${disList}">
+										<td th:text="${user.firstName}"></td>
+										<td th:text="${user.middleName}"></td>
+										<td th:text="${user.lastName}"></td>
+										<td th:text="${user.employeeId}"></td>
+										<td><a th:href="@{'/admin/user/' + ${user.id} + '/edit?account=unassigned'}" class="icon-edit"> <i class="fa fas-bar fa-edit"></i></a></td>
+									</tr> -->
+
+									</tbody>
+								</table>
+
+							</div>
+
+						</div>
+
+						<div class="col-sm-12">
+							<button type="button">Submit</button>
+						</div>
+
+					</div>
+
+					<div class="footer">(c) 2018-2019 . All Rights Reserved.</div>
+
+				</div>
+
+			</div>
+
+
+		</div>
+
+
+	</div>
+
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::datatable-scripts"></span>
+	<script th:src="@{/js/bootstrap-toggle.min.js}"></script>
+	<script type="text/javascript">
+		$(document).ready(
+
+		function() {
+
+			// for datatable
+			$('#dist-table').DataTable({
+				"paging" : true,
+				"ordering" : true,
+				"info" : true
+			});
+
+			function refreshParent() {
+				window.location.reload();
+			}
+
+		});
+	</script>
+
+	<script type="text/javascript">
+		$(document).ready(
+
+		function() {
+			$('#branch-div').hide();
+			$('#asm-div').hide();
+			$('#territory-div').hide();
+			$('#distributor-div').hide();
+
+			// search button click
+			$('#search-dist').on('click', function() {
+				var disCode = $('#distributorCode').val();
+				var disName = $('#distributorName').val();
+				getDistributorByDisCode(disCode, disName);
+			});
+
+			// dropdown unlock on change
+			$('#dropUnlockOperator').on('change', function() {
+
+				if (this.value != null && this.value == 0) {
+
+					$('#branch-div').hide();
+					$('#asm-div').hide();
+					$('#territory-div').hide();
+					$('#distributor-div').hide();
+
+				}
+
+				if (this.value != null && this.value == 1) {
+
+					$('#branch-div').show();
+					$('#asm-div').hide();
+					$('#territory-div').hide();
+					$('#distributor-div').hide();
+
+				}
+
+				if (this.value != null && this.value == 2) {
+
+					$('#branch-div').hide();
+					$('#asm-div').show();
+					$('#territory-div').hide();
+					$('#distributor-div').hide();
+
+				}
+
+				if (this.value != null && this.value == 3) {
+
+					$('#branch-div').hide();
+					$('#asm-div').hide();
+					$('#territory-div').show();
+					$('#distributor-div').hide();
+
+				}
+
+				if (this.value != null && this.value == 4) {
+
+					$('#branch-div').hide();
+					$('#asm-div').hide();
+					$('#territory-div').hide();
+					$('#distributor-div').show();
+
+				}
+
+			});
+
+			// unlock for asm
+			$('#branchForAsm').on('change', function() {
+				if (this.value != null) {
+					setASMZonesForAsm(this.value);
+				}
+			});
+
+			// unlock for so
+			$('#branchForSo').on('change', function() {
+				if (this.value != null) {
+					setASMZonesForSo(this.value);
+				}
+			});
+
+			$('#asmForSo').on('change', function() {
+
+				if (this.value != null) {
+					setTerritoriesForSo(this.value);
+				}
+			});
+
+			// unlock for distributor
+			/* $('#branch').on('change', function() {
+				if (this.value != null) {
+					setASMZones(this.value);
+				}
+			});
+
+			$('#asm').on('change', function() {
+
+				if (this.value != null) {
+					setTerritories(this.value);
+				}
+			});
+
+			$('#territory').on('change', function() {
+
+				if (this.value != null) {
+					getDistributor(this.value);
+				}
+			}); */
+
+			// for table
+			/* function getDistributor(territoryCode) {
+
+				$
+						.ajax({
+							type : 'GET',
+							url : '[[@{/master-data/rest/api/all-distributor?territoryCode=}]]'
+									+ territoryCode,
+							dataType : 'json',
+							success : function(data) {
+								$.alert("got that");
+										
+							}
+						});
+			} */
+
+			function getDistributorByDisCode(disCode, disName) {
+
+				alert("disCode: " + disCode + "disName: " + disName);
+
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/master-data/rest/api/get/distributor?disCode=}]]' + disCode + "&disName=" + disName,
+					dataType : 'json',
+					success : function(data) {
+						$.alert("got that");
+					}
+				});
+			}
+
+			// for asm
+			function setASMZonesForAsm(brCode) {
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/master-data/rest/api/asm-zone/by-branch?branch=}]]' + brCode,
+					dataType : 'json',
+					success : function(data) {
+						$('#asmForAsm').empty();
+						$('#asmForAsm').append($("<option label='Select ASM Zone' value=''></option>"));
+						asmZones = data;
+						$.each(asmZones, function() {
+							$('#asmForAsm').append($("<option></option>").text(this.name + ' ('+this.code+')').val(this.code));
+
+						});
+					}
+				});
+			}
+
+			// for so
+			function setASMZonesForSo(brCode) {
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/master-data/rest/api/asm-zone/by-branch?branch=}]]' + brCode,
+					dataType : 'json',
+					success : function(data) {
+						$('#asmForSo').empty();
+						$('#territoryForSo').empty();
+						$('#asmForSo').append($("<option label='Select ASM Zone' value=''></option>"));
+
+						$('#territoryForSo').append($("<option label='Select Territory' value=''></option>"));
+
+						asmZones = data;
+						$.each(asmZones, function() {
+							$('#asmForSo').append($("<option></option>").text(this.name + ' ('+this.code+')').val(this.code));
+
+						});
+					}
+				});
+			}
+
+			function setTerritoriesForSo(asmZone) {
+
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/master-data/rest/api/territory/by-asm-zone?asmCode=}]]' + asmZone,
+					dataType : 'json',
+					success : function(data) {
+						$('#territoryForSo').empty();
+						$('#territoryForSo').append($("<option label='Select Territory' value=''></option>"));
+						territories = data;
+						$.each(territories, function() {
+							$('#territoryForSo').append($("<option></option>").text(this.name + ' ('+this.code+')').val(this.code));
+
+						});
+					}
+				});
+			}
+
+			// for distributor
+			/* function setASMZones(brCode) {
+				$
+						.ajax({
+							type : 'GET',
+							url : '[[@{/master-data/rest/api/asm-zone/by-branch?branch=}]]'
+									+ brCode,
+							dataType : 'json',
+							success : function(data) {
+								$('#asm').empty();
+								$('#asm')
+										.append(
+												$("<option label='Select ASM Zone' value=''></option>"));
+								asmZones = data;
+								$
+										.each(
+												asmZones,
+												function() {
+													$('#asm')
+															.append(
+																	$(
+																			"<option></option>")
+																			.text(
+																					this.name)
+																			.val(
+																					this.code));
+
+												});
+							}
+						});
+			} */
+
+			/* function setTerritories(asmZone) {
+
+				$
+						.ajax({
+							type : 'GET',
+							url : '[[@{/master-data/rest/api/territory/by-asm-zone?asmCode=}]]'
+									+ asmZone,
+							dataType : 'json',
+							success : function(data) {
+								$('#territory').empty();
+								$('#territory')
+										.append(
+												$("<option label='Select Territory' value=''></option>"));
+								territories = data;
+								$
+										.each(
+												territories,
+												function() {
+													$(
+															'#territory')
+															.append(
+																	$(
+																			"<option></option>")
+																			.text(
+																					this.name)
+																			.val(
+																					this.code));
+
+												});
+							}
+						});
+			} */
+
+			$("#unlockBM").on('click', function() {
+				checkBox = $(this);
+				dialogTitle = '';
+				if (checkBox.prop('checked')) {
+					dialogTitle = 'Unlock for BM';
+				} else {
+					dialogTitle = 'Locked for BM';
+				}
+				$.confirm({
+					icon : 'fa fa-warning',
+					title : dialogTitle,
+					content : 'Please Confirm!',
+					buttons : {
+						confirm : function() {
+							//updateUserAccount(checkBox, 'DISABLE_ENABLE', checkBox.prop('checked'));
+							checkBox.prop("checked", checkBox.prop("checked"));
+						},
+						cancel : function() {
+							checkBox.prop("checked", !checkBox.prop("checked"));
+						}
+					}
+				});
+			});
+
+		});
+	</script>
+
+</body>
+</html>

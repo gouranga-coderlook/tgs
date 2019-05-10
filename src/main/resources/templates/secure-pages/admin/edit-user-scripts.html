@@ -1,0 +1,405 @@
+<script type="text/javascript" th:fragment="page-scripts">
+	$(document).ready(function() {
+
+		if('[[${msg}]]'=='add-success'){
+			$.alert({
+			    backgroundDismiss: true, 
+			    icon : 'fa fa-thumbs-up',
+				title : "Success!",
+				content : 'User Added Successfully!',
+				type: 'green',
+				buttons : {
+					ok : function() {
+					}
+				}
+			});
+		}
+		
+		$('#admin-accounts').hide();		
+		$("#role").hide();
+		$("#role-display").show();
+		$("#lockAccount").prop("checked", ('[[${userAccount?.sstUserAccount?.sstAccount?.locked}]]' == '1'));
+		$("#disableUser").prop("checked", ('[[${userAccount?.sstUser?.status}]]' == '400'));
+
+		$("#cancelUpdate").on('click', function() {
+			location.reload();
+		});
+		
+		$("#confirmChange").on('click', function() {
+			$.confirm({
+				icon : 'fa fa-warning',
+				title : "Change Role!",
+				content : 'Your are trying to change role! Please confirm to proceed!',
+				buttons : {
+					confirm : function() {
+						$("#role").show();
+						$("#role-display").hide();
+						$("#change-role-div").hide();
+						if('[[${userAccount?.sstUserAccount?.sstAccount?.userType?.id}]]'==1){
+							$('#admin-accounts').show();
+							$('#loginIdText-div').hide();
+							populateAdminAccounts();
+						}else{
+							$('#admin-accounts').hide();
+							$('#loginIdText-div').show();
+						}
+					},
+					cancel : function() {
+						// checkBox.prop("checked", !checkBox.prop("checked"));
+					}
+				}
+			});
+
+		});
+
+		$("#restPass").on('click', function() {
+			$.confirm({
+				icon : 'fa fa-warning',
+				title : "Rest Password!",
+				content : 'Please confirm!',
+				buttons : {
+					confirm : function() {
+						restPassword();
+					},
+					cancel : function() {
+						location.reload();
+					}
+				}
+			});
+
+		});
+		var userRole = $('#role').val();
+		if (userRole != null && userRole == 2) {
+			$("#bm-field").show();
+			$("#asm-field").hide();
+			$("#territory-field").hide();
+		} else if (userRole != null && userRole == 3) {
+			$("#bm-field").show();
+			$("#asm-field").show();
+			$("#territory-field").hide();
+		} else if (userRole != null && userRole == 4) {
+			$("#bm-field").show();
+			$("#asm-field").show();
+			$("#territory-field").show();
+		} else {
+			$("#bm-field").hide();
+			$("#asm-field").hide();
+			$("#territory-field").hide();
+		}
+
+		$("#lockAccount").on('click', function() {
+			checkBox = $(this);
+			dialogTitle = '';
+			if (checkBox.prop('checked')) {
+				dialogTitle = 'Lock Account';
+			} else {
+				dialogTitle = 'Unlock Account';
+			}
+			$.confirm({
+				icon : 'fa fa-warning',
+				title : dialogTitle,
+				content : 'Please Confirm!',
+				buttons : {
+					confirm : function() {
+						updateUserAccount(checkBox, 'LOCK_UNLOCK', checkBox.prop('checked'));
+					},
+					cancel : function() {
+						// alert(checkBox.prop("checked"));
+						checkBox.prop("checked", !checkBox.prop("checked"));
+					}
+				}
+			});
+
+		});
+
+		$("#disableUser").on('click', function() {
+			checkBox = $(this);
+			dialogTitle = '';
+			if (checkBox.prop('checked')) {
+				dialogTitle = 'Disable User';
+			} else {
+				dialogTitle = 'Enable User';
+			}
+			$.confirm({
+				icon : 'fa fa-warning',
+				title : dialogTitle,
+				content : 'Please Confirm!',
+				buttons : {
+					confirm : function() {
+						updateUserAccount(checkBox, 'DISABLE_ENABLE', checkBox.prop('checked'));
+					},
+					cancel : function() {
+						checkBox.prop("checked", !checkBox.prop("checked"));
+					}
+				}
+			});
+		});
+
+		$('#role').on('change', function() {
+			userRole = $('#role').val();
+			if(userRole==1){
+				$('#admin-accounts').show();
+				$('#loginIdText-div').hide();
+				populateAdminAccounts();
+			}else{
+				$('#admin-accounts').hide();
+				$('#loginIdText-div').show();
+			}
+			$('#loginIdText').html('Please Set Location(s)');
+			$('#branch').empty();
+			$('#branch').append($("<option label='Select Branch' value=''></option>"));
+			$('#asm').empty();
+			$('#asm').append($("<option label='Select ASM Zone' value=''></option>"));
+			$('#territory').empty();
+			$('#territory').append($("<option label='Select Territory' value=''></option>"));
+			if (this.value >= 2 && this.value <= 4) {
+				setBranches();
+				if (this.value == 2) {
+					$("#bm-field").show();
+					$("#asm-field").hide();
+					$("#territory-field").hide();
+				} else if (this.value == 3) {
+					$("#bm-field").show();
+					$("#asm-field").show();
+					$("#territory-field").hide();
+				} else if (this.value == 4) {
+					$("#bm-field").show();
+					$("#asm-field").show();
+					$("#territory-field").show();
+				}
+			} else {
+				$("#bm-field").hide();
+				$("#asm-field").hide();
+				$("#territory-field").hide();
+			}
+		});
+
+		$('#branch').on('change', function() {
+			if (this.value != null && this.value != "" && userRole == 2) {
+				// reset user loign
+				resetLoginId(this.value, 'BRANCH');
+			} else {
+				$('#loginIdText').text('Please Set Location(s)');
+			}
+
+			if (this.value != null && userRole == 3) {
+				setASMZones(this.value);
+			} else if (this.value != null && userRole == 4) {
+				setASMZones(this.value);
+				$('#territory').empty();
+				$('#territory').append($("<option label='Select Territory' value=''></option>"));
+			}
+		});
+
+		$('#asm').on('change', function() {
+			if (this.value != null && this.value != "" && userRole == 3) {
+				// reset user loign
+				resetLoginId(this.value, 'ASM ZONE');
+			} else {
+				$('#loginIdText').text('Please Set Location(s)');
+			}
+			if (this.value != null && userRole == 4) {
+				setTerritories(this.value);
+			}
+		});
+
+		$('#territory').on('change', function() {
+			if (this.value != null && this.value != "" && userRole == 4) {
+				// reset user loign
+				resetLoginId(this.value, 'TERRITORY');
+			} else {
+				$('#loginIdText').text('Please Set Location(s)');
+			}
+		});
+
+		function setBranches() {
+			$.ajax({
+				type : 'GET',
+				url : '[[@{/master-data/rest/api/branch/all}]]',
+				dataType : 'json',
+				success : function(data) {
+					$('#branch').empty();
+					$('#branch').append($("<option label='Select Branch' value=''></option>"));
+					branch = data;
+					$.each(branch, function() {
+						$('#branch').append($("<option></option>").text(this.name).val(this.code));
+
+					});
+				}
+			});
+		}
+
+		function setASMZones(brCode) {
+			$.ajax({
+				type : 'GET',
+				url : '[[@{/master-data/rest/api/asm-zone/by-branch?branch=}]]' + brCode,
+				dataType : 'json',
+				success : function(data) {
+					$('#asm').empty();
+					$('#asm').append($("<option label='Select ASM Zone' value=''></option>"));
+					asmZones = data;
+					$.each(asmZones, function() {
+						$('#asm').append($("<option></option>").text(this.name).val(this.code));
+
+					});
+				}
+			});
+		}
+
+		function setTerritories(asmZone) {
+			$.ajax({
+				type : 'GET',
+				url : '[[@{/master-data/rest/api/territory/by-asm-zone?asmCode=}]]' + asmZone,
+				dataType : 'json',
+				success : function(data) {
+					$('#territory').empty();
+					$('#territory').append($("<option label='Select Territory' value=''></option>"));
+					territories = data;
+					$.each(territories, function() {
+						$('#territory').append($("<option></option>").text(this.name).val(this.code));
+
+					});
+				}
+			});
+		}
+
+		function resetLoginId(code, type) {
+			$.ajax({
+				type : 'GET',
+				url : '[[@{/master-data/rest/api/login-id/by-geo-details?code=}]]' + code + '&type=' + type,
+				dataType : 'json',
+				success : function(data) {
+					$('#loginIdText').html(data.loginId);
+					checkIfAccountAvailable(data.loginId, false);
+				}
+			});
+		}
+
+		function restPassword() {
+			// PREPARE DATA
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			var jsonParams = {};
+			jsonParams['actionType'] = 'RESET_PASS';
+			jsonParams['action'] = $('#newPass').val();
+			jsonParams['userId'] = '[[${userAccount?.sstUser?.id}]]';
+			jsonParams['account'] = '[[${userAccount?.sstUserAccount?.sstAccount?.loginId}]]';
+			// alert(JSON.stringify(jsonParams));
+			$.ajax({
+				type : 'POST',
+				url : '[[@{/admin/user/rest/api/reset-pass}]]',
+				contentType : 'application/json',
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				data : JSON.stringify(jsonParams),
+				success : function(result) {
+					if (result) {
+						$.alert('Reset Successful!');
+					} else {
+						$.alert('Reset Failed!');
+						checkbox.prop("checked", !checkbox.prop("checked"));
+					}
+				},
+				error : function(e) {
+					$.alert('Reset Failed! Server Error!');
+					checkbox.prop("checked", !checkbox.prop("checked"));
+				}
+			});
+		}
+
+		function updateUserAccount(checkbox, actionType, action) {
+			// PREPARE DATA
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			var jsonParams = {};
+			jsonParams['actionType'] = actionType;
+			if (action)
+				jsonParams['action'] = 1;
+			else
+				jsonParams['action'] = 0;
+			jsonParams['userId'] = '[[${userAccount?.sstUser?.id}]]';
+			jsonParams['account'] = '[[${userAccount?.sstUserAccount?.sstAccount?.loginId}]]';
+			// alert(JSON.stringify(jsonParams));
+			$.ajax({
+				type : 'POST',
+				url : '[[@{/admin/user/rest/api/update-status}]]',
+				contentType : 'application/json',
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				data : JSON.stringify(jsonParams),
+				success : function(result) {
+					if (result) {
+						$.alert('Updated Successfully!');
+					} else {
+						$.alert('Update Failed!');
+						checkbox.prop("checked", !checkbox.prop("checked"));
+					}
+				},
+				error : function(e) {
+					$.alert('Update Failed! Server Error!');
+					checkbox.prop("checked", !checkbox.prop("checked"));
+				}
+			});
+		}
+		
+		function populateAdminAccounts() {
+			loggedinAccount = '[[${session?.loggedInAccount?.loginId}]]';
+			$.ajax({
+				type : 'GET',
+				url : '[[@{/admin/user/rest/api/admin-accounts/all}]]',
+				dataType : 'json',
+				success : function(data) {
+					$('#adminAccounts').empty();
+					$('#adminAccounts').append($("<option label='Select Admin Account' value=''></option>"));
+					adminAccounts = data;
+					$.each(adminAccounts, function() {
+						if (this.loginId != loggedinAccount)
+							$('#adminAccounts').append($("<option></option>").text(this.loginId).val(this.loginId));
+					});
+				}
+			});
+		}
+
+		function checkIfAccountAvailable(accountId, admin) {
+			$.ajax({
+				type : 'GET',
+				url : '[[@{/admin/user/rest/api/account-details?accountId=}]]' + accountId,
+				dataType : 'json',
+				success : function(userAccount) {
+					if (userAccount != null) {
+						$.confirm({
+							icon : 'fa fa-warning',
+							title : userAccount.sstAccount.loginId + ': Already in use!',
+							content : 'This account is already assigned to ' + userAccount.sstUser.firstName + ' ' + userAccount.sstUser.lastName + '(Employee Id : ' + userAccount.sstUser.employeeId + '). Please confirm to proceed!',
+							buttons : {
+								confirm : function() {
+									//
+								},
+								cancel : function() {
+									resetAccoutSelection();
+									if(admin){
+										populateAdminAccounts();
+									}else{
+										setBranches();
+										$('#loginIdText').text('Please Set Location(s)');
+									}
+								}
+							}
+						});
+
+					}
+				}
+			});
+
+		}
+
+		$('#adminAccounts').on('change', function() {
+			if (this.value != null && this.value != '') {
+				checkIfAccountAvailable(this.value, true);
+			}
+		});
+
+	});
+</script>

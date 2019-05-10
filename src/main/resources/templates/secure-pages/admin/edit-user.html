@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header"></head>
+<body>
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+
+					<div class="container-fluid common-user-form">
+						<form th:action="@{/admin/user/edit}" th:object="${userAccount}" method="post">
+							<div class="header">
+								<p class="PageTitle">Basic Information</p>
+							</div>
+
+
+							<div class="row">
+
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+										<label for="First Name">First Name</label> <input type="text" class="form-control" id="firstName" placeholder="First Name" th:field="*{sstUser.firstName}">
+									</div>
+								</div>
+
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+										<label for="Middle Name">Middle Name</label> <input type="text" class="form-control" id="middleName" placeholder="Middle Name" th:field="*{sstUser.middleName}">
+									</div>
+								</div>
+
+
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+										<label for="Last Name">Last Name</label> <input type="text" class="form-control" id="lastName" placeholder="Last Name" th:field="*{sstUser.lastName}">
+									</div>
+								</div>
+
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+										<label for="Employee Id">Employee Id</label> <input type="text" class="form-control" id="EmpId" placeholder="Employee Id" th:field="*{sstUser.employeeId}">
+									</div>
+								</div>
+							</div>
+							<div class="header">
+								<p class="PageTitle">Account Information</p>
+							</div>
+							<div class="row">
+								<div class="col-md-4 col-sm-6" id="admin-accounts">
+									<div class="form-group">
+										<label for="adminAccounts">Login Id:</label> 
+										<select class="form-control" id="adminAccounts" th:field="*{sstUserAccount.sstAccount.loginId}">
+											<option label="Select Account" value=""></option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-4 col-sm-6" id="loginIdText-div">
+									<div class="form-group">
+										<label for="loginIdText">Login Id: </label> <span class="form-control disable-field" id="loginIdText" th:text="${userAccount?.sstUserAccount?.sstAccount?.loginId}"></span>
+									</div>
+								</div>
+								<div class="col-md-4 col-sm-6">
+
+									<div class="form-group">
+										<label for="roleText">Role: </label>
+										<p id="role-display">
+											<span class="form-control disable-field" id="roleText" th:text="${userAccount?.sstUserAccount?.sstAccount?.userType?.typeName}"></span>
+										</p>
+
+										<select class="form-control" id="role" th:field="*{sstUserAccount.sstAccount.userType.id}">
+											<option label="Select Role" value=""></option>
+											<option th:each="userTypeModel : ${userTypeModels}" th:value="${userTypeModel.id}" th:utext="${userTypeModel.typeName}"></option>
+										</select>
+
+										<input type="hidden" th:field="*{currentLoginId}"> <input type="hidden" th:field="*{sstUser.id}" id="sstUserId">
+										
+									</div>
+								</div>
+								<div class="col-md-4 col-sm-6" id="change-role-div">
+									<div class="form-group" style="padding-top: 35px;">
+										<span class="changeRole" id="confirmChange">Change Role/Account</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-4" id="bm-field">
+									<div class="form-group">
+										<label for="Select Branch">Select Branch</label> <select class="form-control" id="branch" th:field="*{branch}">
+											<option label="Select Branch" value=""></option>
+											<option th:each="branch : ${branchs}" th:value="${branch.code}" th:utext="${branch.name}"></option>
+										</select>
+									</div>
+								</div>
+
+
+								<div class="col-md-4" id="asm-field">
+									<div class="form-group">
+										<label for="Select ASM Zone">Select ASM Zone</label> <select class="form-control" id="asm" th:field="*{asmZone}">
+											<option label="Select ASM Zone" value=""></option>
+											<option th:each="asmZone : ${asmZones}" th:value="${asmZone.code}" th:utext="${asmZone.name}" th:selected="${asmZone.code==asmZoneCode}"></option>
+										</select>
+									</div>
+								</div>
+
+
+								<div class="col-md-4" id="territory-field">
+									<div class="form-group">
+										<label for="Select Territory">Select Territory</label> <select class="form-control" id="territory" th:field="*{territory}">
+											<option label="Select Territory" value=""></option>
+											<option th:each="territory : ${territories}" th:value="${territory.code}" th:utext="${territory.name}" th:selected="${territory.code==territoryCode}"></option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-12 text-right">
+									<input type="submit" value="Save" class="btn btn-success" />
+									<button type="button" class="btn btn-warning" id="cancelUpdate">Cancel</button>
+								</div>
+							</div>
+							<input type="hidden" th:name="${_csrf.parameterName}" value="${_csrf.token}" />
+						</form>
+					</div>
+					<hr />
+
+					<div class="container-fluid common-user-form">
+						<div class="header">
+							<p class="PageTitle">Settings for User Account</p>
+						</div>
+
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<div>
+										<input type="checkbox" id="lockAccount" value="1"> <label for=">lockAccount">Lock Account</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<div>
+									<div>
+										<input type="checkbox" id="disableUser" value="1"> <label for="disableUser">Disable User</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<div class="form-group marginTopCustome">
+									<label for="Last Name">Reset Password</label>
+									<div class="input-group">
+										<input class="form-control" type="password" id="newPass"> <span class="input-group-btn">
+											<button class="btn btn-info" id="restPass">Reset</button>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="footer">&copy; 2019 TGS Industries India Ltd. All Rights Reserved.</div>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/admin/edit-user-scripts :: page-scripts"></span>
+</body>
+</html>

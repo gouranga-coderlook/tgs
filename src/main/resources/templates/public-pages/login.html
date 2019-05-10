@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>EverReady :: Login</title>
+<link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" href="../../css/font-awesome.min.css" />
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../../css/bootstrap.min.css" />
+<link rel="stylesheet" th:href="@{/css/jquery-confirm.min.css}" href="../../css/jquery-confirm.min.css">
+<link rel="stylesheet" th:href="@{/css/custom.min.css}" href="../../css/custom.min.css" />
+<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+</head>
+<body class="login">
+
+
+	<div class="centerDiv">
+
+		<div class="loginDiv">
+
+			<p class="loginLogo">
+				<img th:src="@{/images/logo.png}" alt="TGS" title="TGS" />
+			</p>
+
+			<p class="SecondarySale">Secondary Sales Target System</p>
+
+
+			<form class="loginForm" id="loginForm" action="#" th:action="@{/login}" method="post">
+				<div class="form-group userName">
+					<label for="UserName">User Name *</label> 
+					<input type="text" th:name="username" class="form-control" id="username" aria-describedby="UserName" placeholder="User Name">
+					<!-- <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span> -->
+				</div>
+				<div class="form-group userName">
+					<label for="password">Password *</label> 
+					<input type="password" th:name="password" class="form-control" id="password" aria-describedby="password" placeholder="Pasword">
+					<!-- <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span> -->
+				</div>
+
+				<input type="hidden" th:name="${_csrf.parameterName}" value="${_csrf.token}" />
+				<div class="form-group">
+					<input type="submit" class="btn btn-primary form-control" value="Login"/>
+				</div>
+				
+				<!-- <div class="form-group">
+	
+					<a th:href="@{/forget-password}" class="passForget">Forgot Passwrod ?</a>
+				</div> -->
+
+			</form>
+
+			<div class="loginfooter">© 2019 TGS Industries India Ltd.</div>
+
+		</div>
+
+	</div>
+	<script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/jquery.validate.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/jquery-confirm.min.js}"></script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+			$('#loginForm').validate({
+					rules : {
+						username : {
+							required : true
+						},
+						password : {
+							required : true
+						}
+					},
+					highlight : function(element) {
+						$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+					},
+					success : function(element) {
+						$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+					}
+			});
+			
+			if('[[${session?.message}]]'!=null && '[[${session?.message}]]'!=''){
+				$.alert({
+				    title: 'Authentication Failed!',
+				    content: '[[${session?.message}]]',
+				    type: 'red',
+				    typeAnimated: true,
+				    buttons: {
+				        ok: {
+				            text: 'OK',
+				            btnClass: 'btn-red',
+				            action: function(){
+				            	location.reload();
+				            }
+				        }
+				    }
+				});
+			}
+	});
+	</script>
+</body>
+</html>

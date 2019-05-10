@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-inline-form"></head>
+<body>
+	<div class="wrapper">
+
+		<!-- page header  -->
+
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+			
+				<!-- SideBar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid">
+
+						<div class="header">
+							<p class="PageTitle">Secondary Sales Target Scheduling</p>
+						</div>
+						
+						<form id="sstSettingsForm" action="#" th:action="@{sst-schedule-settings}" th:object="${sstSettingsModel}" method="post">
+						<div class="form-inline" id="applicationSettings">
+							<div class="col-3">
+								<span>Month Type</span>
+							</div>
+							<div class="col-8">
+								<span>Schedule On</span>
+							</div>
+						</div>
+						<div class="form-inline" id="applicationSettings">
+							<div class="col-3">
+								<label for="Password Expiration">Month With 31 Days</label>
+							</div>
+							<div class="form-group col-8">
+								<input type="text" class="form-control input-sm" th:field="*{month_with_31_days}" onkeypress="return isNumberKey(event);" ><span class="span12pxTxtb">Days</span>
+							</div>
+						</div>
+
+						<div class="form-inline" id="applicationSettings">
+							<div class="col-3">
+								<label for="Password Expiration">Month With 30 Days</label>
+							</div>
+							<div class="form-group col-8">
+								<input type="text" class="form-control input-sm" th:field="*{month_with_30_days}" onkeypress="return isNumberKey(event);" ><span class="span12pxTxtb">Days</span>
+							</div>
+						</div>
+
+						<div class="form-inline" id="applicationSettings">
+							<div class="col-3">
+								<label for="Password Expiration">Month With 29 Days</label>
+							</div>
+							<div class="form-group col-8">
+								<input type="text" class="form-control input-sm" th:field="*{month_with_29_days}" onkeypress="return isNumberKey(event);" ><span class="span12pxTxtb">Days</span>
+							</div>
+						</div>
+						
+						<div class="form-inline" id="applicationSettings">
+							<div class="col-3">
+								<label for="Password Expiration">Month With 28 Days</label>
+							</div>
+							<div class="form-group col-8">
+								<input type="text" class="form-control input-sm" th:field="*{month_with_28_days}" onkeypress="return isNumberKey(event);" ><span class="span12pxTxtb">Days</span>
+							</div>
+						</div>
+
+
+						<div class="form-inline pull-right">
+							<input type="submit" value="Save" class="btn btn-success" />
+							<button type="button" class="btn btn-warning">Cancel</button>
+						</div>
+
+					</form>
+
+					</div>
+
+				</div>
+			</div>
+
+
+		</div>
+
+
+	</div>
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<script type="text/javascript">
+	//#month_with_31_days-error
+	function isNumberKey(evt)
+	{
+		
+		 var charCode = (evt.which) ? evt.which : event.keyCode
+		 if (charCode > 31 && (charCode < 48 || charCode > 57))
+			return false;
+	
+		 return true;
+	}
+	function isDecimalKey(evt)
+	{
+		
+		 var charCode = (evt.which) ? evt.which : event.keyCode
+		 if (charCode!=45 && charCode!=46 && charCode > 31 && (charCode < 48 || charCode > 57))
+			return false;
+	
+		 return true;
+	}
+	
+	$(document).ready(function() {
+	
+		$('#sstSettingsForm').validate({
+					rules : {
+						month_with_31_days : {
+							required : true
+						},
+						month_with_30_days : {
+							required : true
+						},
+						month_with_29_days : {
+							required : true
+						},
+						month_with_28_days : {
+							required : true
+						}
+					},
+					highlight : function(element) {
+						$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+					},
+					success : function(element) {
+						element.closest('.form-group').removeClass('has-error').addClass('has-success');
+					}
+			});
+	});
+	</script>
+</body>
+
+</html>

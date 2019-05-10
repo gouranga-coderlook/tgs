@@ -1,0 +1,410 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header"></head>
+<body>
+
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-user-form">
+					<div th:switch="${status}"> 
+							<div th:case="add-success" class="alert alert-success">
+							  <strong th:text="${msg}" ></strong>
+							</div>
+							<div th:case="add-Fail" class="alert alert-danger">
+							   <strong th:text="${msg}" ></strong>
+							</div>
+					</div>
+
+						<div class="header">
+							<p class="PageTitle">Basic Information</p>
+
+						</div>
+						<form class="addUserForm" action="#" th:action="@{add}" th:object="${sstUserModel}" method="post">
+							<div class="row">
+
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+										<label for="firstName">First Name *</label> <input type="text" class="form-control" id="firstName" placeholder="Enter First Name" th:field="*{firstName}" required="required">
+									</div>
+								</div>
+
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+										<label for="middleName">Middle Name</label> <input type="text" class="form-control" id="middleName" placeholder="Enter Middle Name" th:field="*{middleName}">
+									</div>
+								</div>
+
+
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+										<label for="lastName">Last Name *</label> <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name" th:field="*{lastName}" required="required">
+									</div>
+								</div>
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+										<label for="empId">Employee Id *</label> <input type="text" class="form-control" id="empId" placeholder="Enter Employee Id" th:field="*{employeeId}" required="required">
+									</div>
+								</div>
+							</div>
+							<div class="header">
+								<p class="PageTitle">Account Information</p>
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="Select A Role">Role *</label> <select class="form-control" id="role" th:field="*{userTypeId}" required="required" >
+											<option label="Select Role" th:value="0"></option>
+											<option th:each="userTypeModel : ${userTypeModels}" th:value="${userTypeModel.id}" th:utext="${userTypeModel.typeName}"></option>
+										</select>
+
+									</div>
+								</div>
+								<div class="col-md-4" id="admin-accounts">
+									<div class="form-group">
+										<label for="adminAccounts">Admin Account</label> 
+										<select class="form-control" id="adminAccounts" th:field="*{loginId}">
+											<option label="Select Admin Account" value=""></option>
+										</select>
+
+									</div>
+								</div>
+								<div class="col-md-4" id="loginIdText-div">
+									<div class="form-group">
+										<label for="loginIdText">Login Id: </label> <span class="form-control disable-field" id="loginIdText" th:text="${userAccount?.sstUserAccount?.sstAccount?.loginId}"></span>
+									</div>
+								</div>
+
+							</div>
+
+							<div class="row">
+								<div class="col-md-4" id="bm-field">
+									<div class="form-group">
+										<label for="Select Branch">Branch</label> <select class="form-control" id="branch" th:field="*{branchCode}">
+											<option label="Select Branch" value=""></option>
+											<option th:each="branch : ${branchs}" th:value="${branch.code}" th:utext="${branch.name}"></option>
+										</select>
+									</div>
+								</div>
+
+
+								<div class="col-md-4" id="asm-field">
+									<div class="form-group">
+										<label for="Select ASM Zone">ASM Zone</label> <select class="form-control" id="asm" th:field="*{asmZoneCode}">
+											<option label="Select ASM Zone" value=""></option>
+											<!-- <option th:each="asmZone : ${asmZones}" th:value="${asmZone.code}" th:utext="${asmZone.name}"></option> -->
+										</select>
+									</div>
+								</div>
+
+
+								<div class="col-md-4" id="territory-field">
+									<div class="form-group">
+										<label for="Select Territory">Territory</label> <select class="form-control" id="territory" th:field="*{territoryCode}">
+											<option label="Select Territory" value=""></option>
+											<!-- <option th:each="territory : ${territories}" th:value="${territory.code}" th:utext="${territory.name}"></option> -->
+										</select>
+									</div>
+								</div>
+
+
+								<div class="col-md-12 text-right">
+									<input type="submit" value="Save" class="btn btn-success" />
+									<button type="button" class="btn btn-warning">Cancel</button>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="footer">&copy; 2019 TGS Industries India Ltd. All Rights Reserved.</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#addUserForm').validate({
+				rules : {
+					firstName : {
+						required : true
+					},
+					lastName : {
+						required : true
+					},
+					employeeId : {
+						required : true
+					}
+				},
+				highlight : function(element) {
+					$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+				},
+				success : function(element) {
+					$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+				}
+			});
+
+			$("#bm-field").hide();
+			$("#asm-field").hide();
+			$("#territory-field").hide();
+			$("#admin-accounts").hide();
+			$('#loginIdText-div').hide();
+			
+			$('#role').on('change', function() {
+				resetAccoutSelection();
+				$('#loginIdText').text('Please Set Location(s)');
+				if (this.value >= 2 && this.value <= 4) {
+					setBranches();
+				}
+				if (this.value == 1) {
+					populateAdminAccounts();
+					$("#admin-accounts").show();
+					$('#loginIdText-div').hide();
+					$("#bm-field").hide();
+					$("#asm-field").hide();
+					$("#territory-field").hide();
+				} else if (this.value == 2) {
+					$("#admin-accounts").hide();
+					$('#loginIdText-div').show();
+					$("#bm-field").show();
+					$("#asm-field").hide();
+					$("#territory-field").hide();
+				} else if (this.value == 3) {
+					$("#admin-accounts").hide();
+					$('#loginIdText-div').show();
+					$("#bm-field").show();
+					$("#asm-field").show();
+					$("#territory-field").hide();
+				} else if (this.value == 4) {
+					$("#admin-accounts").hide();
+					$('#loginIdText-div').show();
+					$("#bm-field").show();
+					$("#asm-field").show();
+					$("#territory-field").show();
+				} else {
+					$("#admin-accounts").hide();
+					$('#loginIdText-div').hide();
+					$("#bm-field").hide();
+					$("#asm-field").hide();
+					$("#territory-field").hide();
+				}
+
+			});
+
+			function populateAdminAccounts() {
+				loggedinAccount = '[[${session?.loggedInAccount?.loginId}]]';
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/admin/user/rest/api/admin-accounts/all}]]',
+					dataType : 'json',
+					success : function(data) {
+						$('#adminAccounts').empty();
+						$('#adminAccounts').append($("<option label='Select Admin Account' value=''></option>"));
+						adminAccounts = data;
+						$.each(adminAccounts, function() {
+							if (this.loginId != loggedinAccount)
+								$('#adminAccounts').append($("<option></option>").text(this.loginId).val(this.loginId));
+						});
+					}
+				});
+			}
+
+			$('#adminAccounts').on('change', function() {
+				if (this.value != null && this.value != '') {
+					checkIfAccountAvailable(this.value, true);
+				}
+			});
+
+			$('#branch').on('change', function() {
+
+				if (this.value != null && $('#role').val() == 2) {
+					// reset user loign
+					resetLoginId(this.value, 'BRANCH');
+				} else if (this.value != null && $('#role').val() == 3) {
+					setASMZones(this.value);
+				} else if (this.value != null && $('#role').val() == 4) {
+					setASMZones(this.value);
+					$('#territory').empty();
+					$('#territory').append($("<option label='Select Territory' value=''></option>"));
+				}
+			});
+
+			$('#asm').on('change', function() {
+				if (this.value != null && this.value != "" && $('#role').val() == 3) {
+					// reset user loign
+					resetLoginId(this.value, 'ASM ZONE');
+				} else {
+					$('#loginIdText').text('Please Set Location(s)');
+				}
+				if (this.value != null && $('#role').val() == 4) {
+					setTerritories(this.value);
+				}
+			});
+
+			$('#territory').on('change', function() {
+				if (this.value != null && this.value != "" && $('#role').val() == 4) {
+					// reset user loign
+					resetLoginId(this.value, 'TERRITORY');
+				} else {
+					$('#loginIdText').text('Please Set Location(s)');
+				}
+			});
+			function setBranches() {
+				
+				alert("branches");
+				
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/master-data/rest/api/branch/all}]]',
+					dataType : 'json',
+					success : function(data) {
+						$('#branch').empty();
+						$('#branch').append($("<option label='Select Branch' value=''></option>"));
+						branch = data;
+						$.each(branch, function() {
+							$('#branch').append($("<option></option>").text(this.name).val(this.code));
+
+						});
+					}
+				});
+			}
+
+			function setASMZones(brCode) {
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/master-data/rest/api/asm-zone/by-branch?branch=}]]' + brCode,
+					dataType : 'json',
+					success : function(data) {
+						$('#asm').empty();
+						$('#asm').append($("<option label='Select ASM Zone' value=''></option>"));
+						asmZones = data;
+						$.each(asmZones, function() {
+							$('#asm').append($("<option></option>").text(this.name).val(this.code));
+
+						});
+					}
+				});
+			}
+
+			function setTerritories(asmZone) {
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/master-data/rest/api/territory/by-asm-zone?asmCode=}]]' + asmZone,
+					dataType : 'json',
+					success : function(data) {
+						$('#territory').empty();
+						$('#territory').append($("<option label='Select Territory' value=''></option>"));
+						territories = data;
+						$.each(territories, function() {
+							$('#territory').append($("<option></option>").text(this.name).val(this.code));
+
+						});
+					}
+				});
+			}
+
+			$("#empId").focusout(function() {
+				empId = $("#empId").val();
+				if (empId != '') {
+					$.ajax({
+						type : 'GET',
+						url : '[[@{/admin/user/rest/api/employee-id/check-availability?employeeId=}]]' + empId,
+						dataType : 'json',
+						success : function(isAvailable) {
+							if (!isAvailable) {
+								$.alert({
+									title : 'Already in use!',
+									content : 'Please enter a unique Employee Id!',
+									buttons : {
+										ok : function() {
+											$("#empId").val('');
+											$("#empId").focus();
+										}
+									}
+								});
+							}
+						}
+					});
+				} else {
+					$("#empId").focus();
+				}
+
+			});
+
+			
+			function resetLoginId(code, type) {
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/master-data/rest/api/login-id/by-geo-details?code=}]]' + code + '&type=' + type,
+					dataType : 'json',
+					success : function(data) {
+						$('#loginIdText').html(data.loginId);
+						checkIfAccountAvailable(data.loginId, false);
+					}
+				});
+			}
+			function checkIfAccountAvailable(accountId, admin) {
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/admin/user/rest/api/account-details?accountId=}]]' + accountId,
+					dataType : 'json',
+					success : function(userAccount) {
+						if (userAccount != null) {
+							$.confirm({
+								icon : 'fa fa-warning',
+								title : userAccount.sstAccount.loginId + ': Already in use!',
+								content : 'This account is already assigned to ' + userAccount.sstUser.firstName + ' ' + userAccount.sstUser.lastName + '(Employee Id : ' + userAccount.sstUser.employeeId + '). Please confirm to proceed!',
+								buttons : {
+									confirm : function() {
+										//
+									},
+									cancel : function() {
+										resetAccoutSelection();
+										if(admin){
+											populateAdminAccounts();
+										}else{
+											setBranches();
+											$('#loginIdText').text('Please Set Location(s)');
+										}
+									}
+								}
+							});
+
+						}
+					}
+				});
+
+			}
+
+			function resetAccoutSelection(){
+				$('#adminAccounts').empty();
+				$('#adminAccounts').append($("<option label='Select Admin Account' value=''></option>"));
+				$('#branch').empty();
+				$('#branch').append($("<option label='Select Branch' value=''></option>"));
+				$('#asm').empty();
+				$('#asm').append($("<option label='Select ASM Zone' value=''></option>"));
+				$('#territory').empty();
+				$('#territory').append($("<option label='Select Territory' value=''></option>"));
+			} 
+			
+			
+			
+		});
+	</script>
+
+</body>
+</html>

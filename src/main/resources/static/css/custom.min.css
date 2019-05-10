@@ -1,0 +1,443 @@
+body {
+	font-family: 'Lato', sans-serif;
+	font-weight: normal;
+	font-size: 12px;
+	overflow-x: hidden;
+	padding: 0px;
+	margin: 0px;
+	background: #2c3e50;
+}
+
+.alert-success {
+	background-color: #18BC9C;
+	color: #fff;
+}
+
+.btn-primary {
+	background-color: #2C3E50;
+	border-color: #2C3E50;
+}
+
+.btn-download {
+	background-color: #DE0A2D;
+	border-color: #DE0A2D;
+	color: #fff;
+}
+
+.btn-back {
+	background-color: #DCC10C;
+	border-color: #DCC10C;
+	color: #fff;
+}
+
+.icon-edit {
+	display: inline-block;
+	padding-left: 10px;
+	cursor: pointer;
+}
+
+.login {
+	background: #d3d3d3;
+}
+
+.loginOutWrap {
+	background: #fff;
+	width: 100%;
+	padding: 0px 15px;
+	text-align: center;
+}
+
+.centerDiv {
+	width: 480px;
+	margin: 0 auto;
+}
+
+.footer {
+	width: 100%;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	background: #e11500;
+	text-align: center;
+	color: #fff;
+	padding: 6px 0px;
+	font-size: 13px;
+	margin-top: 15px;
+}
+
+.login .loginDiv {
+	background: #fff;
+	width: 100%;
+	margin-top: 20%;
+	box-shadow: 0px 2px 9.1px 0.9px rgba(0, 0, 0, 0.15);
+	padding: 0px 15px;
+}
+
+.login .loginDiv .loginLogo, .loginOutWrap .loginLogo {
+	text-align: center;
+	padding: 30px 0px 0px 0px;
+	margin: 0px;
+}
+
+.login .loginDiv .SecondarySale, .loginOutWrap .SecondarySale {
+	font-size: 20px;
+	color: #ed1c24;
+	padding: 5px 0px 0px 0px;
+	text-align: center;
+}
+
+.login .loginDiv .loginForm {
+	padding: 0px 0px 20px 0px;
+}
+
+.login .loginDiv .loginForm .form-group {
+	margin-bottom: 0px;
+}
+
+.login .loginDiv .loginForm .userName {
+	margin-bottom: 30px;
+}
+
+.login .loginDiv .loginForm  .btn-login {
+	background: #ed1c24;
+	color: #fff;
+}
+
+.login .loginDiv .loginForm .passForget {
+	font-size: 14px;
+	font-weight: 400;
+	color: #ed1c24;
+	text-decoration: none;
+	padding-top: 8px;
+	display: inline-block;
+}
+
+.login .loginDiv .loginfooter, .loginOutWrap .loginfooter {
+	padding: 20px 0px 10px 0px;
+	text-align: center;
+	color: #fd7b80;
+	font-size: 13px;
+}
+
+.topRow {
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#feffff+0,f0f0f0+100 */
+	background: #feffff; /* Old browsers */
+	background: -moz-linear-gradient(top, #feffff 0%, #f0f0f0 100%);
+	/* FF3.6-15 */
+	background: -webkit-linear-gradient(top, #feffff 0%, #f0f0f0 100%);
+	/* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom, #feffff 0%, #f0f0f0 100%);
+	/* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff',
+		endColorstr='#f0f0f0', GradientType=0); /* IE6-9 */
+	width: 100%;
+	flex-shrink: 0;
+	flex-grow: 1;
+	/*  position:fixed;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px; 
+	z-index:1150;*/
+	height: 62px;
+}
+
+.topRow .logo {
+	margin-top: 6px;
+}
+
+.topRow .userName {
+	isplay: inline-block;
+	padding: 20px 0px 0px 0px;
+	font-weight: 700;
+	font-size: 14px;
+	margin: 0px;
+}
+
+.breadcrumb-row {
+	width: 100%;
+	flex-shrink: 0;
+	flex-grow: 1;
+}
+
+.breadcrumb {
+	background: #e42714;
+	border-radius: 0rem;
+	color: #fff;
+}
+
+.breadcrumb a, .breadcrumb .breadcrumb-item:before {
+	color: #fff;
+	text-decoration: none;
+}
+
+.breadcrumb .breadcrumb-item.active {
+	color: #fff;
+}
+
+.content .PageTitle {
+	font-size: 16px;
+	font-weight: 600;
+	color: #e42714;
+	/* padding-bottom: 15px; */
+}
+
+.content .form-inline {
+	margin-bottom: 35px;
+}
+
+.content .form-inline label {
+	font-size: 13px;
+	font-weight: 500;
+	position: relative;
+	margin-right: 10px;
+	top: 0px;
+	justify-content: left;
+}
+
+.content .common-user-form .row {
+	/* margin-bottom: 20px; */
+	
+}
+
+.content .form-group {
+	position: relative;
+}
+
+.content .form-group label, .content .form-group select, .content .form-group input[type="text"]
+	{
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.changeRole {
+	right: -87px;
+	top: 37px;
+	font-size: 13px;
+	color: #128dff;
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.content #applicationSettings input[type="text"] {
+	width: 80px;
+	text-align: center;
+	font-size: 12px;
+	font-weight: 600;
+	margin-right: 10px;
+}
+
+.btn {
+	margin-right: 5px;
+}
+
+.btn-warning {
+	color: #fff;
+}
+
+.span12pxTxtb {
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.marginTopCustome {
+	margin-top: -32px;
+}
+
+.padding-bottom15p {
+	padding-bottom: 15px;
+}
+
+/* .custom-control {
+	top:28px;
+} */
+.custom-control-label {
+	position: relative;
+	margin-bottom: 0;
+	vertical-align: top;
+}
+
+.custom-control-label::before, .custom-file-label, .custom-select {
+	-webkit-transition: background-color 0.15s ease-in-out, border-color
+		0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+	transition: background-color 0.15s ease-in-out, border-color 0.15s
+		ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+	transition: background-color 0.15s ease-in-out, border-color 0.15s
+		ease-in-out, box-shadow 0.15s ease-in-out;
+	transition: background-color 0.15s ease-in-out, border-color 0.15s
+		ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s
+		ease-in-out;
+}
+
+/* .dataTable thead>tr>th, .dataTable tfoot>tr>th {
+	font-weight: normal !important;
+	background-color: #1491a5;
+	color: #fff;
+}
+ */
+/* .table-hover .table-primary:hover>td, .table-hover .table-primary:hover>th
+	{
+	font-weight: normal !important;
+	background-color: #1491a5 !important;
+	color: #fff !important;
+} */
+
+/* .dataTable thead>tr>th {
+	vertical-align: bottom;
+	border-bottom: 2px solid #ff0a0a;
+} */
+/* .dataTable .odd {
+	background-color: #ecf0f1;
+	color: #000;
+}
+
+.dataTable .even {
+	background-color: #87999a;
+	color: #fff;
+	
+} */
+.common-information-area .row {
+	margin-bottom: 10px;
+}
+
+.common-information-area p {
+	font-size: 13px;
+	color: #000000;
+	margin-bottom: 0px !important;
+}
+
+.common-information-area p span {
+	color: #e42714;
+	display: inline-block;
+	margin-left: 15px;
+}
+
+.disable-field {
+	background: #ddd;
+}
+
+.has-success {
+	margin-bottom: 0px !important;
+}
+
+.has-error {
+	color: red;
+	margin-bottom: 0px !important;
+}
+
+/* table.dataTable tbody th, table.dataTable tbody td {
+	padding: 3px 10px !important;
+}
+
+table.dataTable thead th, table.dataTable thead td {
+	padding: 5px 10px !important;
+} */
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 40px;
+	height: 25px;
+}
+
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+
+.slider:before {
+	position: absolute;
+	content: "";
+	height: 23px;
+	width: 23px;
+	left: 1px;
+	bottom: 1px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+
+input:checked+.slider {
+	background-color: #2196F3;
+}
+
+input:focus+.slider {
+	box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+	-webkit-transform: translateX(15px);
+	-ms-transform: translateX(15px);
+	transform: translateX(15px);
+}
+
+/* Rounded sliders */
+.slider.round {
+	border-radius: 15px;
+}
+
+.slider.round:before {
+	border-radius: 50%;
+}
+
+.sst-target-details {
+	margin-left: 0px;
+	padding-left: 0px !important;
+	margin-bottom: 20px;
+}
+
+.dt-button {
+	color: #044004 !important;
+	border: none !important;
+	padding: 0px !important;
+	font: inherit;
+	cursor: pointer;
+	font-size: 1.5em !important;
+}
+
+.dt-buttons {
+	float: right !important;
+	padding-right: 10px !important;
+}
+
+marquee {
+	font-size: 1.5em !important;
+	-moz-animation-play-state: paused;
+	-webkit-animation-play-state: paused;
+	animation-play-state: paused;
+	color: #ff5722;
+}
+
+.inactive-record {
+	text-decoration: line-through;
+	background-color: #ffa98f !important;
+}
+
+/* th input{
+	min-width: 20px !important;
+    max-width: 80px !important;
+}
+ */
+th, td {
+	white-space: nowrap;
+}
+
+div.dataTables_wrapper {
+	margin: 0 auto;
+}
+
+thead input {
+	width: 100%;
+}

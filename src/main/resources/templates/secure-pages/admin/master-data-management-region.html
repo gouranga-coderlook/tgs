@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-data-table">
+<body>
+
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-user-form">
+						
+
+						<div class="container-fluid data-table-area">
+						
+						<div th:insert="secure-pages/fragments/import-csv :: importcsv"></div>
+
+							<table id="asm-zone-table" class="table table-hover table-bordered dataTable">
+								<thead>
+									<tr class="table-primary">
+										<th>CODE</th>
+										<th>NAME</th>
+										<th>ASM ZONE</th>
+
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr th:each="territory : ${territories}">
+										<td th:text="${territory.code}"></td>
+										<td th:text="${territory.name}"></td>
+										<td th:text="${territory.asmZone.code}"></td>
+									</tr>
+
+								</tbody>
+							</table>
+
+						</div>
+
+					</div>
+
+					<div class="footer">&copy; 2019 TGS Industries India Ltd. All Rights Reserved.</div>
+
+				</div>
+
+			</div>
+
+
+		</div>
+
+
+	</div>
+
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::datatable-scripts"></span>
+	<script type="text/javascript">
+		$(document).ready(
+
+		function() {
+
+			// for datatable
+			$('#asm-zone-table').DataTable({
+				"paging" : false,
+				"ordering" : false,
+				"info" : false
+			});
+
+			function refreshParent() {
+				window.location.reload();
+			}
+
+		});
+	</script>
+</body>
+</html>

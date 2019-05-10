@@ -1,0 +1,496 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-data-table">
+
+</head>
+
+<body>
+
+	<div class="modal" id="changeModel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header text-white bg-danger">
+					<h5 class="modal-title">Change Destination</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true"><i class="fa fas-bar fa-times"></i></span>
+					</button>
+				</div>
+
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="Select LOB">Select LOB</label> <select class="form-control" id="lobDropdown">
+							<option label="Select LOB" value=""></option>
+							<option th:each="lob : ${lobList}" th:value="${lob.lob.costSectionCode}" th:utext="${lob.lob.description}"></option>
+						</select>
+					</div>
+				</div>
+
+				<div class="modal-body" th:if="${type.equals('BM')}">
+					<div class="form-group">
+						<label for="Select ASM Zone">Select ASM Zone</label> <select class="form-control" id="asmDorpdown">
+							<option label="Select ASM Zone" value=""></option>
+							<option th:each="asmZone : ${asmZones}" th:value="${asmZone.asmZone.code}" th:utext="${asmZone.asmZone.name}"></option>
+						</select>
+					</div>
+				</div>
+
+				<div class="modal-body" th:if="${type == 'BM' || type == 'ASM'}">
+					<div class="form-group">
+						<label for="Select Territory">Select Territory</label> <select class="form-control" id="terDorpdown">
+							<option label="Select Territory" value=""></option>
+							<option th:each="territory : ${terList}" th:value="${territory.territory.code}" th:utext="${territory.territory.name}"></option>
+						</select>
+					</div>
+				</div>
+
+				<div class="modal-body" th:if="${type == 'BM' || type == 'ASM' || type == 'SO'}">
+					<div class="form-group">
+						<label for="Select Distributor">Select Distributor</label> <select class="form-control" id="distDorpdown">
+							<option label="Select Distributor" value=""></option>
+							<option th:each="distributor : ${distributors}" th:value="${distributor.distributor.code}" th:utext="${distributor.distributor.name}"></option>
+						</select>
+					</div>
+				</div>
+
+				<div class="modal-body" th:if="${type == 'BM' || type == 'ASM' || type == 'SO'}">
+					<div class="form-group">
+						<label for="Select Salesman">Select Salesman</label> <select class="form-control" id="salesDorpdown">
+							<option label="Select Salesman" value=""></option>
+							<option th:each="salesman : ${salesmanList}" th:value="${salesman.salesman.code}" th:utext="${salesman.salesman.name}"></option>
+						</select>
+					</div>
+				</div>
+
+				<div class="modal-body" th:if="${type == 'BM' || type == 'ASM' || type == 'SO'}">
+					<div class="form-group">
+						<label for="Select Beat">Select Beat</label> <select class="form-control" id="beatDorpdown">
+							<option label="Select Beat" value=""></option>
+							<option th:each="beat : ${beatList}" th:value="${beat.beat.code}" th:utext="${beat.beat.name}"></option>
+						</select>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+
+					<button type="submit" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-danger confirmVal" id="submit-change">Submit</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-information-area">
+						<div class="col-sm-12 sst-target-details" th:insert="secure-pages/fragments/sst-target-details :: top-pannel"></div>
+
+						<table id="so-retail-table" class="table table-hover table-bordered dataTable">
+							<thead>
+								<tr class="table-primary">
+									<th>Ret Code</th>
+									<th>Retailer Name</th>
+									<th>SST Vol System</th>
+									<th>SST Value System</th>
+									<th>SST Rate System</th>
+									<th>SST Vol Edit</th>
+									<!-- <th>SST Rate Edit</th> -->
+									<th>SST Value Edit</th>
+
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="retail : ${retailerList}">
+									<td th:text="${retail.retailer.code}"></td>
+									<td th:text="${retail.retailer.name}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(retail.sstVol, 0, 'COMMA', 0, 'POINT')}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(retail.sstValue, 0, 'COMMA', 2, 'POINT')}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(retail.sstRate, 0, 'COMMA', 2, 'POINT')}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(retail.sstModVol, 0, 'COMMA', 0, 'POINT')}"></td>
+									<!-- <td th:text="${#numbers.formatDecimal(retail.sstModRate, 0, 'COMMA', 2, 'POINT')}"></td> -->
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(retail.sstModValue, 0, 'COMMA', 2, 'POINT')}"></td>
+									<!-- <td class="dt-body-right" th:text="${#numbers.formatDecimal(retail.sstRate * retail.sstModVol, 0, 'COMMA', 2, 'POINT')}"></td> -->
+								</tr>
+
+							</tbody>
+						</table>
+
+					</div>
+					<!-- .container-fluid ends -->
+
+					<div class="col-md-12 text-right" style="margin-top: 20px;">
+						<a class="btn btn-info" id="change-button" data-toggle="modal" data-target="#changeDestination" style="color: #fff;"><i class="fa fas-bar fa-search fa2"></i> Change Location</a>
+						<button type="button" class="btn btn-back">
+							<a th:href="@{${backUrl}}">Back</a>
+						</button>
+						<!-- <a class="btn btn-download" th:href="@{/report/target/excel/}+${type}">Download Total Target</a> -->
+					</div>
+					<div class="footer">&copy; 2019 TGS Industries India Ltd. All Rights Reserved.</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::datatable-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::chnage-loc-scripts"></span>
+	<script type="text/javascript">
+		$(document).ready(
+
+		function() {
+
+			// for datatable
+			$('#so-retail-table').DataTable({
+				dom: 'flBrtip',
+				buttons: [{
+	                extend: 'excelHtml5',
+	                text:   '<i class="fa fa-file-excel-o"></i>',
+	                exportOptions: {
+	                    columns: [0,1,2,3,4,5,6]
+	                }
+	            }],
+				"paging" : true,
+				"ordering" : true,
+				"info" : true,
+				"oLanguage": {
+					"sSearch": "Filter Result:"
+				}
+			});
+
+			$('#change-button').on('click', function() {
+
+			});
+
+			// lob change
+			$('#lobDropdown').on('change', function() {
+				if (this.value != null) {
+					var type = '[[${type}]]';
+					if (type == "BM") {
+						$('#asmDorpdown').empty();
+						$('#asmDorpdown').append($("<option label='Select ASM Zone' value=''></option>"));
+
+						getAsmZoneList(this.value);
+					} else if (type == "ASM") {
+						$('#terDorpdown').empty();
+						$('#terDorpdown').append($("<option label='Select Territory' value=''></option>"));
+						getTerritoryListByLobId(this.value);
+					} else if (type == "SO") {
+						$('#distDorpdown').empty();
+						$('#distDorpdown').append($("<option label='Select Distributor' value=''></option>"));
+						getDistributorListByLobId(this.value);
+
+					}
+
+				}
+			});
+			// for asm dropdown
+			function getAsmZoneList(lobId) {
+
+				alert('[[${type}]]' + ": " + lobId);
+
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/bm/rest/api/asm?lobId=}]]' + lobId,
+					dataType : 'json',
+					success : function(data) {
+						$('#asmDorpdown').empty();
+						$('#asmDorpdown').append($("<option label='Select ASM Zone' value=''></option>"));
+						asmZones = data;
+						$.each(asmZones, function() {
+							$('#asmDorpdown').append($("<option></option>").text(this.asmZone.name).val(this.asmZone.code));
+
+						});
+					}
+				});
+			}
+
+			function getTerritoryListByLobId(lobId) {
+
+				alert('[[${type}]]' + ": " + lobId);
+
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/asm/rest/api/territory?lobId=}]]' + lobId,
+					dataType : 'json',
+					success : function(data) {
+						$('#terDorpdown').empty();
+						$('#terDorpdown').append($("<option label='Select Territory' value=''></option>"));
+						terList = data;
+						$.each(terList, function() {
+							$('#terDorpdown').append($("<option></option>").text(this.territory.name).val(this.territory.code));
+
+						});
+					}
+				});
+			}
+
+			// asm change
+			$('#asmDorpdown').on('change', function() {
+				if (this.value != null) {
+
+					var lobId = $('#lobDropdown').val();
+
+					$('#terDorpdown').empty();
+					$('#terDorpdown').append($("<option label='Select Territory' value=''></option>"));
+
+					getTerritoryListByAsmIdAndLob(lobId, this.value);
+				}
+			});
+			function getTerritoryListByAsmIdAndLob(lobId, asmCode) {
+
+				alert(lobId + " : " + asmCode);
+
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/bm/rest/api/territory?lobId=}]]' + lobId + '&asmCode=' + asmCode,
+					dataType : 'json',
+					success : function(data) {
+						$('#terDorpdown').empty();
+						$('#terDorpdown').append($("<option label='Select Territory' value=''></option>"));
+						terList = data;
+						$.each(terList, function() {
+							$('#terDorpdown').append($("<option></option>").text(this.territory.name).val(this.territory.code));
+
+						});
+					}
+				});
+
+			}
+
+			// get distributor list by lob
+			function getDistributorListByLobId(lobId) {
+
+				alert(lobId);
+
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/so/rest/api/distributor?lobId=}]]' + lobId,
+					dataType : 'json',
+					success : function(data) {
+						$('#distDorpdown').empty();
+						$('#distDorpdown').append($("<option label='Select Distributor' value=''></option>"));
+						distributors = data;
+						$.each(distributors, function() {
+							$('#distDorpdown').append($("<option></option>").text(this.distributor.name).val(this.distributor.code));
+
+						});
+					}
+				});
+
+			}
+			// asm change
+			$('#terDorpdown').on('change', function() {
+				if (this.value != null) {
+
+					var lobId = $('#lobDropdown').val();
+
+					$('#distDorpdown').empty();
+					$('#distDorpdown').append($("<option label='Select Distributor' value=''></option>"));
+
+					getDistributorListByTerritory(lobId, this.value);
+				}
+			});
+			function getDistributorListByTerritory(lobId, code) {
+				var type = '[[${type}]]';
+
+				if (type == "BM") {
+
+					$.ajax({
+						type : 'GET',
+						url : '[[@{/bm/rest/api/distributor?lobId=}]]' + lobId + '&territoryCode=' + code,
+						dataType : 'json',
+						success : function(data) {
+							$('#distDorpdown').empty();
+							$('#distDorpdown').append($("<option label='Select Distributor' value=''></option>"));
+							distributors = data;
+							$.each(distributors, function() {
+								$('#distDorpdown').append($("<option></option>").text(this.distributor.name).val(this.distributor.code));
+
+							});
+						}
+					});
+
+				} else if (type == "ASM") {
+
+					$.ajax({
+						type : 'GET',
+						url : '[[@{/asm/rest/api/distributor?lobId=}]]' + lobId + '&territoryCode=' + code,
+						dataType : 'json',
+						success : function(data) {
+							$('#distDorpdown').empty();
+							$('#distDorpdown').append($("<option label='Select Distributor' value=''></option>"));
+							distributors = data;
+							$.each(distributors, function() {
+								$('#distDorpdown').append($("<option></option>").text(this.distributor.name).val(this.distributor.code));
+
+							});
+						}
+					});
+
+				}
+
+			}
+
+			// asm change
+			$('#distDorpdown').on('change', function() {
+				if (this.value != null) {
+
+					var lobId = $('#lobDropdown').val();
+
+					$('#salesDorpdown').empty();
+					$('#salesDorpdown').append($("<option label='Select Salesman' value=''></option>"));
+
+					getSalesmanList(lobId, this.value);
+				}
+			});
+			function getSalesmanList(lobId, code) {
+				var type = '[[${type}]]';
+
+				if (type == "BM") {
+
+					$.ajax({
+						type : 'GET',
+						url : '[[@{/bm/rest/api/salesman?lobId=}]]' + lobId + '&distCode=' + code,
+						dataType : 'json',
+						success : function(data) {
+							$('#salesDorpdown').empty();
+							$('#salesDorpdown').append($("<option label='Select Salesman' value=''></option>"));
+							salesmanList = data;
+							$.each(salesmanList, function() {
+								$('#salesDorpdown').append($("<option></option>").text(this.salesman.name).val(this.salesman.code));
+
+							});
+						}
+					});
+
+				} else if (type == "ASM") {
+
+					$.ajax({
+						type : 'GET',
+						url : '[[@{/asm/rest/api/salesman?lobId=}]]' + lobId + '&distCode=' + code,
+						dataType : 'json',
+						success : function(data) {
+							$('#salesDorpdown').empty();
+							$('#salesDorpdown').append($("<option label='Select Salesman' value=''></option>"));
+							salesmanList = data;
+							$.each(salesmanList, function() {
+								$('#salesDorpdown').append($("<option></option>").text(this.salesman.name).val(this.salesman.code));
+
+							});
+						}
+					});
+
+				} else if (type == "SO") {
+
+					$.ajax({
+						type : 'GET',
+						url : '[[@{/asm/rest/api/salesman?lobId=}]]' + lobId + '&distCode=' + code,
+						dataType : 'json',
+						success : function(data) {
+							$('#salesDorpdown').empty();
+							$('#salesDorpdown').append($("<option label='Select Salesman' value=''></option>"));
+							salesmanList = data;
+							$.each(salesmanList, function() {
+								$('#salesDorpdown').append($("<option></option>").text(this.salesman.name).val(this.salesman.code));
+
+							});
+						}
+					});
+
+				}
+
+			}
+
+			// asm change
+			$('#salesDorpdown').on('change', function() {
+				if (this.value != null) {
+
+					var lobId = $('#lobDropdown').val();
+
+					$('#beatDorpdown').empty();
+					$('#beatDorpdown').append($("<option label='Select Beat' value=''></option>"));
+
+					getBeatList(lobId, this.value);
+				}
+			});
+			function getBeatList(lobId, code) {
+				var type = '[[${type}]]';
+
+				if (type == "BM") {
+
+					$.ajax({
+						type : 'GET',
+						url : '[[@{/bm/rest/api/beat?lobId=}]]' + lobId + '&salesmanCode=' + code,
+						dataType : 'json',
+						success : function(data) {
+							$('#beatDorpdown').empty();
+							$('#beatDorpdown').append($("<option label='Select Beat' value=''></option>"));
+							beatList = data;
+							$.each(beatList, function() {
+								$('#beatDorpdown').append($("<option></option>").text(this.beat.name).val(this.beat.code));
+
+							});
+						}
+					});
+
+				} else if (type == "ASM") {
+
+					$.ajax({
+						type : 'GET',
+						url : '[[@{/asm/rest/api/beat?lobId=}]]' + lobId + '&salesmanCode=' + code,
+						dataType : 'json',
+						success : function(data) {
+							$('#beatDorpdown').empty();
+							$('#beatDorpdown').append($("<option label='Select Beat' value=''></option>"));
+							beatList = data;
+							$.each(beatList, function() {
+								$('#beatDorpdown').append($("<option></option>").text(this.beat.name).val(this.beat.code));
+
+							});
+						}
+					});
+
+				} else if (type == "SO") {
+
+					$.ajax({
+						type : 'GET',
+						url : '[[@{/asm/rest/api/beat?lobId=}]]' + lobId + '&salesmanCode=' + code,
+						dataType : 'json',
+						success : function(data) {
+							$('#beatDorpdown').empty();
+							$('#beatDorpdown').append($("<option label='Select Beat' value=''></option>"));
+							beatList = data;
+							$.each(beatList, function() {
+								$('#beatDorpdown').append($("<option></option>").text(this.beat.name).val(this.beat.code));
+
+							});
+						}
+					});
+
+				}
+
+			}
+		});
+	</script>
+</body>
+</html>

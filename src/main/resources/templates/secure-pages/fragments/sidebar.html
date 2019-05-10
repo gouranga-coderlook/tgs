@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<ul class="list-unstyled components" th:fragment="left-sidebar">
+	<!-- <li class="active"><a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
+		<ul class="collapse list-unstyled" id="homeSubmenu">
+			<li><a href="#">Home 1</a></li>
+			<li><a href="#">Home 2</a></li>
+			<li><a href="#">Home 3</a></li>
+		</ul></li> -->
+	<li><a th:href="@{/dashboard}"><i class="fa fas-bar fa-tachometer left-panel-icon"></i> Dashboard</a></li>
+	<li sec:authorize="hasRole('ROLE_BM')"><a th:href="@{/bm/initial-input}"><i class="fa fas-bar fa-bullseye left-panel-icon"></i>Initial Target Input</a></li>
+	<li sec:authorize="hasRole('ROLE_BM')"><a th:href="@{/sstg/bm}"><i class="fa fas-bar fa-bullseye left-panel-icon"></i>Secondary Sales Target</a></li>
+	<li sec:authorize="hasRole('ROLE_ASM')"><a th:href="@{/sstg/asm}"><i class="fa fas-bar fa-bullseye left-panel-icon"></i>Secondary Sales Target</a></li>
+	<li sec:authorize="hasRole('ROLE_SO')"><a th:href="@{/sstg/so}"><i class="fa fas-bar fa-bullseye left-panel-icon"></i>Secondary Sales Target</a></li>
+	<li sec:authorize="hasRole('ROLE_BM')"><a th:href="@{/sstg/bm/search}"><i class="fa fas-bar fa-search left-panel-icon"></i>Search SST</a></li>
+	<li sec:authorize="hasRole('ROLE_ASM')"><a th:href="@{/sstg/asm/search}"><i class="fa fas-bar fa-search left-panel-icon"></i>Search SST</a></li>
+	<li sec:authorize="hasRole('ROLE_SO')"><a th:href="@{/sstg/so/search}"><i class="fa fas-bar fa-search left-panel-icon"></i>Search SST</a></li>
+	<li sec:authorize="hasRole('ROLE_ADMIN')"><a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fas-bar fa-users left-panel-icon"></i>User &amp; Role Management</a>
+		<ul class="collapse list-unstyled sub-menu" id="pageSubmenu">
+			<li><a th:href="@{/admin/user/search}">Search User Account</a></li>
+			<li><a th:href="@{/admin/user/add}">Add User</a></li>
+			<li><a th:href="@{/admin/user/unassigned-user}">User without Account</a></li>
+		</ul></li>
+	<li sec:authorize="hasRole('ROLE_ADMIN')"><a href="#masterDataSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fas-bar fa-table left-panel-icon"></i>Master Data</a>
+		<ul class="collapse list-unstyled sub-menu" id="masterDataSubmenu">
+			<li><a th:href="@{/master-data/accounts}">Accounts</a></li>
+			<li><a th:href="@{/master-data/lob}">LOB</a></li>
+			<li><a th:href="@{/master-data/branch}">Branch</a></li>
+			<li><a th:href="@{/master-data/asm-zone}">ASM Zone</a></li>
+			<li><a th:href="@{/master-data/territory}">Territory</a></li>
+			<li><a th:href="@{/master-data/beat}">Beat</a></li>
+			<li><a th:href="@{/master-data/retailer}">Retailer</a></li>
+			<li><a th:href="@{/master-data/distributor}">Distributor</a></li>
+			<li><a th:href="@{/master-data/primary-sales}">Primary Sales</a></li>
+			<li><a th:href="@{/master-data/salesman}">Salesman</a></li>
+
+		</ul></li>
+	<!-- <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/admin/user/bm-input-status}"><i class="fa fas-bar fa-key left-panel-icon"></i>BM Input Status</a></li> -->
+	<li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/admin/user/target-conf-status}"><i class="fa fas-bar fa-key left-panel-icon"></i>Target Confirmation Status</a></li>
+
+	<li sec:authorize="hasRole('ROLE_ADMIN')"><a href="#settingsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fas-bar fa-cogs left-panel-icon"></i>Settings</a>
+		<ul class="collapse list-unstyled sub-menu" id="settingsSubmenu">
+			<li><a th:href="@{/admin/application-settings}">Application Settings</a></li>
+			<li><a th:href="@{/admin/sst-schedule-settings}">SST Schedule Settings</a></li>
+		</ul></li>
+	<!-- <li><a href="#">Portfolio</a></li>-->
+	<li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/admin/user/unfreeze-sst-data}"><i class="fa fas-bar fa-key left-panel-icon"></i>Unfreeze SST Data</a></li>
+	<li sec:authorize="hasRole('ROLE_USER')"><a th:href="@{/change-password}"><i class="fa fas-bar fa-key left-panel-icon"></i>Change Password</a></li>
+	<li sec:authorize="hasRole('ROLE_USER')"><a th:href="@{/logout}"><i class="fa fas-bar fa-sign-out left-panel-icon"></i>Sign Out</a></li>
+</ul>
+
+</html>

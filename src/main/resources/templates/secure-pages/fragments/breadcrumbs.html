@@ -1,0 +1,115 @@
+
+<ul class="breadcrumb" th:fragment="breadcrumb">
+	<!-- home -->
+	<li class="breadcrumb-item" th:if="${breadcrumb.get('home')}"><a th:href="@{/dashboard}">Home</a></li>
+	
+	<!-- dashboard -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('dashboard')}">Dashboard </li>
+	
+	<!-- dashboard -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('change-password')}">Change Password</li>
+
+	
+	<!-- user role management -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('user-role-management')}">User &amp; Role Management </li>
+	
+	<!-- add user -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('add-user')}">Add User</li>
+
+	
+	<!-- search user -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('search-user')}">Search User</li>
+	
+	<!-- unmapped user -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('unassigned-user')}">Search User without Account</li>
+	
+	<!-- unfreeze sst data -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('unfreeze-sst-data')}">Unfreeze SST Data</li>
+	
+	<!-- edit user -->
+	<li class="breadcrumb-item" th:if="${breadcrumb.get('edit-user')}"><a th:href="@{/admin/user/search}">User &amp; Role Management / Search User</a></li>
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('edit-user')}">Edit User</li>
+	
+	<!-- application settings -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('application-settings')}">Settings</li>
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('application-settings')}">Application Settings</li>
+	
+	<!-- sst schedule settings -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('sst-schedule-settings')}">Settings</li>
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('sst-schedule-settings')}">SST Schedule Settings</li>
+	
+	<!-- bm input -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('initial-target-input')}">Initial Target Input </li>
+	
+	<!-- master data management ASM zone -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('master-data')}">Master Data</li>
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('ASM-zone')}">ASM Zone</li>
+	
+	<!-- master data management branch -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('branch')}">Branch</li>
+	
+	<!-- master data management LOB -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('accounts')}">Accounts</li>
+	
+	
+	<!-- master data management LOB -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('LOB')}">LOB</li>
+	
+	<!-- master data management beat -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('beat')}">Beat</li>
+	
+	<!-- master data management retailer -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('territory')}">Territory</li>
+	
+	<!-- master data management territory -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('retailer')}">Retailer</li>
+	
+	<!-- master data management salesman -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('salesman')}">Salesman</li>
+	
+	<!-- master data management distributer -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('distributor')}">Distributor</li>
+	
+	<!-- master data management primary sales -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('primary-sales')}">Primary Sales</li>
+	
+	<!-- master data management secondary sales -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('secondary-sales')}">Secondary Sales</li>
+	
+	<!-- lob list -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('lob-list')}">Lob List</li>
+	
+	<!-- lob item -->
+	<li class="breadcrumb-item active" th:text="${lob.description}" th:if="${breadcrumb.get('lob-item')}"></li>
+	
+	<!-- asm item -->
+	<li class="breadcrumb-item active" th:text="${asmZone.name}" th:if="${breadcrumb.get('asm-item')}"></li>
+	
+	<!-- territory item -->
+	<li class="breadcrumb-item active" th:text="${territory.name}" th:if="${breadcrumb.get('ter-item')}"></li>
+	
+	<!-- distributer list -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('distributor-list')}">Distributor List</li>
+	
+	<!-- distributer item -->
+	<li class="breadcrumb-item active" th:text="${distributor.name}" th:if="${breadcrumb.get('distributor-item')}"></li>
+	
+	<!-- salesman list -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('salesman-list')}">Salesman List</li>
+	
+	<!-- Salesman item -->
+	<li class="breadcrumb-item active" th:text="${salesman.name}" th:if="${breadcrumb.get('salesman-item')}"></li>
+	
+	<!-- beat list -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('beat-list')}">Beat List</li>
+	
+	<!--beat item -->
+	<li class="breadcrumb-item active" th:text="${beat.name}" th:if="${breadcrumb.get('beat-item')}"></li>
+	
+	<!-- bm input status -->
+	<!-- <li class="breadcrumb-item active" th:if="${breadcrumb.get('bm-input-status')}">BM Input Status</li> -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('target-conf-status')}">Target Confirmation Status</li>
+	<!-- bm input status -->
+	<li class="breadcrumb-item active" th:if="${breadcrumb.get('sstg-search')}">Search SST</li>
+	
+</ul>

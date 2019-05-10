@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-data-table"></head>
+<body>
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+
+			<div class="row">
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-information-area">
+						<div class="row">
+							<div class="col-md-4">
+								<p>
+									Target Confirmation Input Status for the Month:&nbsp;<span th:text="${nextMonth}"></span>
+								</p>
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="container-fluid data-table-area">
+
+
+						<table id="bm-table" class="table table-hover table-bordered dataTable">
+							<thead>
+								<tr class="table-primary">
+									<th>User Account</th>
+									<th>Location Type</th>
+									<th>Location Code</th>
+									<th>Submitted By</th>
+									<th>Submission Time</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="tch : ${targetConfirmation}">
+									<td th:text="${tch.sstAccount.loginId}"></td>
+									<td th:text="${tch.sstAccount.geoLocType}"></td>
+									<td th:text="${tch.sstAccount.geoLocCode}"></td>
+									<td th:text="${tch.sstUser.firstName}+ ' ' +${tch.sstUser.lastName}"></td>
+									<td th:text="${tch.dateTime}"></td>
+								</tr>
+
+							</tbody>
+						</table>
+
+					</div>
+
+
+					<div class="footer">(c) 2018-2019 . All Rights Reserved.</div>
+
+				</div>
+
+			</div>
+
+
+		</div>
+
+
+	</div>
+
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::datatable-scripts"></span>
+	<script type="text/javascript">
+		$(document).ready(
+
+		function() {
+
+			// for datatable
+			$('#bm-table').DataTable({
+				"paging" : true,
+				"ordering" : true,
+				"info" : true
+			});
+
+		});
+	</script>
+
+
+</body>
+</html>

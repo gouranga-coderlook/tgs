@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-data-table">
+
+</head>
+
+<body>
+
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-information-area">
+
+						<div class="col-sm-12 sst-target-details" th:insert="secure-pages/fragments/sst-target-details :: top-pannel"></div>
+
+						<table id="so-lob-table"  class="stripe row-border order-column" >
+							<thead>
+								<tr class="table-primary">
+									<th>LOB</th>
+									<th>Description</th>
+									<th>SST Vol System</th>
+									<th>SST Value System</th>
+									<th>SST Vol Edit</th>
+									<th>SST Value Edit</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="lob : ${lobList}">
+									<td th:style="${lob.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"><span th:if="${lob.colorCode == '1'}"><a><i class="fa fas-bar fa-exclamation-triangle"></i></a></span> <span> </span> <span
+										th:text="${lob.lob.costSectionCode}"></span></td>
+									<td th:text="${lob.lob.description}" th:style="${lob.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(lob.sstVol, 0, 'COMMA', 0, 'POINT')}" th:style="${lob.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(lob.sstValue, 0, 'COMMA', 2, 'POINT')}" th:style="${lob.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(lob.sstModVol, 0, 'COMMA', 0, 'POINT')}" th:style="${lob.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"></td>
+									<td class="dt-body-right" th:text="${#numbers.formatDecimal(lob.sstModValue, 0, 'COMMA', 2, 'POINT')}" th:style="${lob.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"></td>
+									<td th:style="${lob.colorCode == '1' ? 'background-color: 	#F08080;' : 'background-color: ;'}"><a th:href="@{${url}+'/lob/'+${lob.lob.costSectionCode}}" class="icon-edit"> <i class="fa fas-bar fa-folder-open-o fa2"></i>
+									</a></td>
+								</tr>
+
+							</tbody>
+						</table>
+
+					</div>
+					<!-- .container-fluid ends -->
+
+					<div class="col-md-12 text-right" style="margin-top: 20px;">
+						<!-- 						<button type="button" class="btn btn-back">
+							<a th:href="@{/dashboard}">Back</a>
+						</button>
+ -->
+						<a class="btn btn-download" th:href="@{/report/target/excel/}+${type}">Download Total Target</a>
+					</div>
+					<div class="footer">&copy; 2019 TGS Industries India Ltd. All Rights Reserved.</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::datatable-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::chnage-loc-scripts"></span>
+	<script type="text/javascript">
+		$(document).ready(
+
+		function() {
+
+			// for datatable
+			$('#so-lob-table').DataTable({
+				dom : 'flBrtip',
+				buttons : [ {
+					extend : 'excelHtml5',
+					text : '<i class="fa fa-file-excel-o"></i>',
+					exportOptions : {
+						columns : [ 0, 1, 2, 3, 4, 5 ]
+					}
+				} ],
+				"paging" : true,
+				"ordering" : true,
+				"info" : true,
+				"oLanguage" : {
+					"sSearch" : "Filter Result:"
+				}
+			});
+
+		});
+	</script>
+</body>
+</html>

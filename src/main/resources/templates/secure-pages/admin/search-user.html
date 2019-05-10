@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-data-table"></head>
+<body>
+
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-user-form">
+
+						<div class="header">
+							<p class="PageTitle">Search User</p>
+						</div>
+
+						<form class="row" action="#" th:action="@{search}" th:object="${searchUserModel}" method="post">
+						
+
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+										<label for="First Name">First Name</label> <input type="text" class="form-control" id="firstName" placeholder="Enter First Name" th:field="*{firstName}">
+									</div>
+								</div>
+
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+										<label for="Last Name">Last Name</label> <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name" th:field="*{lastName}">
+									</div>
+								</div>
+								
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+										<label for="Employee Id">Employee Id</label> <input type="text" class="form-control" id="EmpId" placeholder="Enter Employee Id" th:field="*{empId}">
+									</div>
+								</div>
+
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+										<label for="Select A Role">Role</label> <select class="form-control" id="role" th:field="*{role}">
+											<option label="Select Role" value=""></option>
+											<option th:each="userTypeModel : ${userTypeModels}" th:value="${userTypeModel.id}" th:utext="${userTypeModel.typeName}"></option>
+										</select>
+
+									</div>
+								</div>
+
+								<div class="col-md-3 col-sm-6" id="bm-field">
+									<div class="form-group">
+										<label for="Select Branch">Branch</label> <select class="form-control" id="branch" th:field="*{branch}">
+											<option label="Select Branch" value=""></option>
+											<option th:each="branch : ${branchs}" th:value="${branch.code}" th:utext="${branch.name}"></option>
+										</select>
+									</div>
+								</div>
+
+								<div class="col-md-3 col-sm-6" id="asm-field">
+									<div class="form-group">
+										<label for="Select ASM Zone">ASM Zone</label> <select class="form-control" id="asm" th:field="*{asmZone}">
+											<option label="Select ASM Zone" value=""></option>
+											<!-- <option th:each="asmZone : ${asmZones}" th:value="${asmZone.code}" th:utext="${asmZone.name}"></option> -->
+										</select>
+									</div>
+								</div>
+
+								<div class="col-md-3 col-sm-6" id="territory-field">
+									<div class="form-group">
+										<label for="Select Territory">Territory</label> <select class="form-control" id="territory" th:field="*{territory}">
+											<option label="Select Territory" value=""></option>
+											<!-- <option th:each="territory : ${territories}" th:value="${territory.code}" th:utext="${territory.name}"></option> -->
+										</select>
+									</div>
+								</div>
+
+								<div class=" col-md-3 col-sm-6">
+									<input type="submit" value="Search" class="btn btn-success" style="margin-top: 30px;"/>
+									<!-- <button type="button" class="btn btn-warning">Cancel</button> -->
+								</div>
+							
+
+						</form>
+						
+						<table id="search-result-table" class="table table-hover table-bordered dataTable">
+								<thead>
+									<tr class="table-primary">
+										<th>Name</th>
+										<th>Employee Id</th>
+										<th>Login Id</th>
+										<th>Role</th>
+										<th>Branch</th>
+										<th>ASM Zone</th>
+										<th>Territory</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+
+								<tbody>
+									
+									<tr th:each="user : ${userList}">
+										<td th:text="${user.sstUser.firstName} +' ' + ${user.sstUser.lastName}"></td>
+										<td th:text="${user.sstUser.employeeId}"></td>
+										<td th:text="${user.loginId}"></td>
+										<td th:text="${user?.role?.typeName}"></td>
+										<td th:text="${user?.branch?.name}"></td>
+										<td th:text="${user?.asmZone?.name}"></td>
+										<td th:text="${user?.territory?.name}"></td> 
+										<td>
+											<a th:href="@{'/admin/user/' + ${user.sstUser.id} + '/edit?account=' + ${user.loginId}}" class="icon-edit"> <i class="fa fas-bar fa-edit"></i></a>
+										</td>
+									</tr>
+
+								</tbody>
+							</table>
+
+					</div>
+
+
+					<div class="footer">&copy; 2019 TGS Industries India Ltd. All Rights Reserved.</div>
+
+				</div>
+
+			</div>
+
+
+		</div>
+
+
+	</div>
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::datatable-scripts"></span>
+	
+	<script>
+		$(document).ready(function() {
+			
+			// for datatable
+			$('#search-result-table').DataTable({
+				"pagingType": "full_numbers",
+				"ordering" : true,
+				"info" : true
+			});
+			
+			$('#branch').on('change', function() {
+				if(this.value!=null){
+					setASMZones(this.value);
+					$('#territory').empty();
+					$('#territory').append($("<option label='Select Territory' value=''></option>"));
+				}
+			});
+			
+			$('#asm').on('change', function() {
+				if(this.value!=null){
+					setTerritories(this.value);	  
+				}
+			});
+
+			
+			function setASMZones(brCode){
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/master-data/rest/api/asm-zone/by-branch?branch=}]]'+brCode,
+					dataType : 'json',
+					success : function(data) {
+						$('#asm').empty();
+						$('#asm').append($("<option label='Select ASM Zone' value=''></option>"));
+						asmZones = data;
+						$.each(asmZones, function() {
+							$('#asm').append($("<option></option>").text(this.name).val(this.code));
+							
+						});
+					}
+				});	
+			}	
+			
+			function setTerritories(asmZone){
+				$.ajax({
+					type : 'GET',
+					url : '[[@{/master-data/rest/api/territory/by-asm-zone?asmCode=}]]'+asmZone,
+					dataType : 'json',
+					success : function(data) {
+						$('#territory').empty();
+						$('#territory').append($("<option label='Select Territory' value=''></option>"));
+						territories = data;
+						$.each(territories, function() {
+							$('#territory').append($("<option></option>").text(this.name).val(this.code));
+							
+						});
+					}
+				});	
+			}	
+			
+		});
+	</script>
+</body>
+</html>

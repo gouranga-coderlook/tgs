@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:insert="secure-pages/fragments/header :: html-header-data-table"></head>
+<body>
+	<div class="wrapper">
+
+		<!-- page header  -->
+		<div class="container-fluid topRow" th:insert="secure-pages/fragments/header :: page-header"></div>
+
+		<div class="container-fluid">
+
+			<div class="row">
+				<!-- Side bar  -->
+				<nav id="sidebar" th:insert="secure-pages/fragments/sidebar :: left-sidebar"></nav>
+
+				<!-- Page Content  -->
+				<div id="content" class="content">
+
+					<!-- breadCrumb -->
+					<div class="breadcrumb-row" th:insert="secure-pages/fragments/breadcrumbs :: breadcrumb"></div>
+
+					<div class="container-fluid common-information-area">
+						<div class="row">
+							<div class="col-md-4">
+								<p>
+									BM Input Status for the Month:&nbsp;<span th:text="${nextMonth}"></span>
+								</p>
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="container-fluid data-table-area">
+
+
+						<table id="bm-table" class="table table-hover table-bordered dataTable">
+							<thead>
+								<tr class="table-primary">
+									<th>Branch Code</th>
+									<th>Branch Name</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="inputStatus : ${sstDataBmInputStatus}">
+									<td th:text="${inputStatus.id.code}"></td>
+									<td th:text="${inputStatus.name}"></td>
+									<td>
+
+										<div th:switch="${inputStatus.submitStatus}">
+											<p th:case="'0'">Pending</p>
+											<p th:case="'1'">Submitted</p>
+										</div>
+
+									</td>
+								</tr>
+
+							</tbody>
+						</table>
+
+					</div>
+
+
+					<div class="footer">(c) 2018-2019 . All Rights Reserved.</div>
+
+				</div>
+
+			</div>
+
+
+		</div>
+
+
+	</div>
+
+	<span th:insert="secure-pages/fragments/footer :: page-scripts"></span>
+	<span th:insert="secure-pages/fragments/footer ::datatable-scripts"></span>
+	<script type="text/javascript">
+		$(document).ready(
+
+		function() {
+
+			// for datatable
+			$('#bm-table').DataTable({
+				"paging" : true,
+				"ordering" : true,
+				"info" : true
+			});
+
+		});
+	</script>
+
+
+</body>
+</html>
